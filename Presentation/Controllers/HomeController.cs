@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using BoardGameNight.Models;
+using Presentation.Models;
 
-namespace BoardGameNight.Controllers;
+namespace Presentation.Controllers;
 
 public class HomeController : Controller
 {

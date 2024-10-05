@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGameNight", "BoardGameNight\BoardGameNight.csproj", "{EE469E53-9B8B-459C-A98C-6D22274CA98E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{EE469E53-9B8B-459C-A98C-6D22274CA98E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{BE1FE23D-7C26-45FE-A274-69C1D4AEDDEC}"
 EndProject

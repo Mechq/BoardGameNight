@@ -1,4 +1,4 @@
-namespace BoardGameNight.Models;
+namespace Presentation.Models;
 
 public class ErrorViewModel
 {
