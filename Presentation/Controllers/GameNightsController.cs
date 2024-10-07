@@ -4,11 +4,11 @@ using Presentation.Models;
 
 namespace Presentation.Controllers;
 
-public class HomeController : Controller
+public class GameNightsController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<GameNightsController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public GameNightsController(ILogger<GameNightsController> logger)
     {
         _logger = logger;
     }
@@ -18,7 +18,7 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Profile()
+    public IActionResult Privacy()
     {
         return View();
     }
@@ -28,4 +28,5 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
 }

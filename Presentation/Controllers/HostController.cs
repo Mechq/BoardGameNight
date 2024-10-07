@@ -4,11 +4,11 @@ using Presentation.Models;
 
 namespace Presentation.Controllers;
 
-public class HomeController : Controller
+public class HostController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<HostController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HostController(ILogger<HostController> logger)
     {
         _logger = logger;
     }
@@ -18,14 +18,11 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Profile()
-    {
-        return View();
-    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
 }
