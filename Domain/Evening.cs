@@ -12,10 +12,13 @@ public class Evening
         Address = address;
     }
 
-    private int Id { set; get; }
-    private User Host { set; get; }
-    private int MaxUsers { set; get; }
-    private DateOnly HostDate { set; get; }
-    private string? Allergy { set; get; }
-    private Address Address { set; get; }
+    public int Id { set; get; }
+    public User Host { set; get; }
+    public int MaxUsers { set; get; }
+    public DateOnly HostDate { set; get; }
+    public string? Allergy { set; get; }
+    public Address Address { set; get; }
+    
+    public List<Game> BoardGames { set; get; }
+    public List<User> Participants { set; get; }
 }

@@ -8,5 +8,5 @@ public class Game
     private Genre Genre { set; get; }
     private string ImageURL { set; get; }
     private GameType TypeOfGame { set; get; }
-    private Boolean IsAgeRestricted { set; get; }
+    private bool IsAgeRestricted { set; get; }
 }

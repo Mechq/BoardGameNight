@@ -1,7 +1,32 @@
 @{
 ViewData["Title"] = "Game Night";
 }
+@model Domain.Evening
 
-<div class="text-center">
-    <h1 class="display-4">Detail page of a game night</h1>
+<div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg mt-10 p-6">
+    <h1 class="text-4xl font-bold text-center mb-6">Game Night Details</h1>
+    <div class="mb-4">
+        <h2 class="text-2xl font-semibold text-gray-800">Host Name</h2>
+        <p class="text-gray-600">@Model.Host.Name</p>
+    </div>
+    <div class="mb-4">
+        <h2 class="text-2xl font-semibold text-gray-800">Date</h2>
+        <p class="text-gray-600">@Model.HostDate.ToString("MMMM dd, yyyy")</p>
+    </div>
+    <div class="mb-4">
+        <h2 class="text-2xl font-semibold text-gray-800">Location</h2>
+        <p class="text-gray-600">@Model.Address.City, @Model.Address.Street, @Model.Address.HouseNumber</p> 
+    </div>
+    @*<div class="mb-4">
+        <h2 class="text-2xl font-semibold text-gray-800">Participants</h2>
+        <ul class="list-disc pl-6 text-gray-600">
+            @foreach (var participant in Model.Participants)
+            {
+            <li>@participant.Name</li>
+            }
+        </ul>
+    </div>*@
+    <div class="text-center mt-6">
+        <a href="@Url.Action("Index", "GameNights")" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Game Nights</a>
+    </div>
 </div>
