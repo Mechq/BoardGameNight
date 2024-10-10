@@ -1,6 +1,24 @@
-namespace Presentation.Views.AttendedNights;
-
-public class Indx_cshtml
-{
-    
+@{
+ViewData["Title"] = "Alle Deelgenomen Avonden";
 }
+
+<div class="text-center relative min-h-screen">
+    <h1 class="text-4xl font-bold mb-8">Alle deelgenomen avonden</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+        @foreach (var evening in Model)
+        {
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <div class="px-6 py-4">
+                <h5 class="text-xl font-semibold mb-2">@evening.HostDate.ToString("MMMM dd, yyyy")</h5> <!-- Formatting date -->
+                <p class="text-gray-700">@evening.Host.Name</p>
+            </div>
+            <div class="px-6 py-4">
+                <a href="@Url.Action("Detailpage", "GameNights", new { id = evening.Id })" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Details
+                </a>
+            </div>
+        </div>
+        }
+    </div>
+    
+</div>

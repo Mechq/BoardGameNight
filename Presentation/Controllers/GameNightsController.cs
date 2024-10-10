@@ -55,10 +55,7 @@ public class GameNightsController : Controller
         return View(detailGameNight);
     }
 
-    public IActionResult Form()
-    {
-        return View();
-    }
+    
     
     //todo implement form
     /*public IActionResult Create()
