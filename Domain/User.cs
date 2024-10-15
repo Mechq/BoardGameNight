@@ -6,8 +6,10 @@ namespace Domain;
 
 public class User
 {
-    [Key]
-    private int Id { set; get; }
+    public User() { }
+    
+    
+    public int Id { set; get; }
     [Column(TypeName = "nvarchar(50)")]
     public string Name { set; get; }
     

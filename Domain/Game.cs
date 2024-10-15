@@ -2,11 +2,11 @@ namespace Domain;
 
 public class Game
 {
-    private int Id { set; get; }
-    private string Name { set; get; }
-    private string Description { set; get; }
-    private Genre Genre { set; get; }
-    private string ImageURL { set; get; }
-    private GameType TypeOfGame { set; get; }
-    private bool IsAgeRestricted { set; get; }
+    public int Id { set; get; }
+    public string Name { set; get; }
+    public string Description { set; get; }
+    public Genre Genre { set; get; }
+    public string ImageURL { set; get; }
+    public GameType TypeOfGame { set; get; }
+    public bool IsAgeRestricted { set; get; }
 }
