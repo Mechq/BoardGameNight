@@ -24,9 +24,9 @@ public class GameNightsController : Controller
             new DateOnly(2005, 08, 27),
             "",
             new Address(1, "Patrijs", "Barendrecht"));
-        var gameNight = new Evening(1, user, 8, new DateOnly(2024, 11, 7), "",
+        var gameNight = new Evening(1, 2, 8, new DateOnly(2024, 11, 7), "",
             new Address(2, "Sandelhout", "Barendrecht"));
-        var gameNight2 = new Evening(2, user, 8, new DateOnly(2024, 11, 7), "",
+        var gameNight2 = new Evening(2, 2, 8, new DateOnly(2024, 11, 7), "",
             new Address(2, "Sandelhout", "Barendrecht"));
         List<Evening> gameNightList = new List<Evening>() { gameNight, gameNight2 };
         return View(gameNightList);
@@ -45,9 +45,9 @@ public class GameNightsController : Controller
             new DateOnly(2005, 08, 27),
             "",
             new Address(1, "Patrijs", "Barendrecht"));
-        var gameNight = new Evening(1, user, 8, new DateOnly(2024, 11, 7), "",
+        var gameNight = new Evening(1, 2, 8, new DateOnly(2024, 11, 7), "",
             new Address(2, "Sandelhout", "Barendrecht"));
-        var gameNight2 = new Evening(2, user, 8, new DateOnly(2024, 11, 7), "",
+        var gameNight2 = new Evening(2, 2, 8, new DateOnly(2024, 11, 7), "",
             new Address(2, "Sandelhout", "Barendrecht"));
         
         List<Evening> gameNightList = new List<Evening>() { gameNight, gameNight2 };
