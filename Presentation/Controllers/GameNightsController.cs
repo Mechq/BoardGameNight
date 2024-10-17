@@ -29,33 +29,31 @@ public class GameNightsController : Controller
         return View(gameNights);
     }
 
-    public IActionResult Detailpage(int id)
+    public async Task<IActionResult> Detailpage(int id)
     {
         if (id == 0)
         {
             return NotFound();
         }
-        //temp code
-        var user = new User("Stef Rensma", 
-            "stefrensa@gmail.com", 
-            Gender.Man, 
-            new DateOnly(2005, 08, 27),
-            "",
-            new Address(1, "Patrijs", "Barendrecht"));
-        var gameNight = new Evening(1, 2, 8, new DateOnly(2024, 11, 7), "",
-            new Address(2, "Sandelhout", "Barendrecht"));
-        var gameNight2 = new Evening(2, 2, 8, new DateOnly(2024, 11, 7), "",
-            new Address(2, "Sandelhout", "Barendrecht"));
+
         
-        List<Evening> gameNightList = new List<Evening>() { gameNight, gameNight2 };
-        Evening detailGameNight = gameNightList.Find(e => e.Id == id);
-        return View(detailGameNight);
+        var evening = await _context.Evenings
+            .Include(e => e.Host) 
+            .Include(e => e.Address) 
+            .Include(e => e.Participants) 
+            .ThenInclude(ep => ep.Participant) 
+            .FirstOrDefaultAsync(e => e.Id == id); 
+
+        if (evening == null)
+        {
+            return NotFound();
+        }
+
+        return View(evening);
     }
 
-    public IActionResult Form()
-    {
-        return View();
-    }
+
+
     
     //todo implement form
     /*public IActionResult Create()
