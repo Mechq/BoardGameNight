@@ -21,23 +21,23 @@ public class GameNightContext : DbContext
             .HasOne(e => e.Host)
             .WithMany()
             .HasForeignKey(e => e.HostId)
-            .OnDelete(DeleteBehavior.Restrict); // Use Restrict to avoid cascade delete issues
+            .OnDelete(DeleteBehavior.Restrict); 
 
-        // Configuring many-to-many relationship through EveningParticipant
+        
         modelBuilder.Entity<EveningParticipant>()
-            .HasKey(ep => new { ep.EveningId, ep.ParticipantId }); // Composite key
+            .HasKey(ep => new { ep.EveningId, ep.ParticipantId }); 
 
         modelBuilder.Entity<EveningParticipant>()
             .HasOne(ep => ep.Evening)
-            .WithMany(e => e.Participants) // Assuming Participants is a collection of EveningParticipants
+            .WithMany(e => e.Participants) 
             .HasForeignKey(ep => ep.EveningId)
-            .OnDelete(DeleteBehavior.Restrict); // Use Restrict to avoid cascade delete issues
+            .OnDelete(DeleteBehavior.Restrict); 
 
         modelBuilder.Entity<EveningParticipant>()
             .HasOne(ep => ep.Participant)
             .WithMany()
             .HasForeignKey(ep => ep.ParticipantId)
-            .OnDelete(DeleteBehavior.Restrict); // Use Restrict to avoid cascade delete issues
+            .OnDelete(DeleteBehavior.Restrict); 
     }
 
 
