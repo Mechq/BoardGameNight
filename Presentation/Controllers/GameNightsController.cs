@@ -1,35 +1,32 @@
 using System.Diagnostics;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Presentation.Data;
 using Presentation.Models;
 
 namespace Presentation.Controllers;
 
 public class GameNightsController : Controller
 {
-    private readonly ILogger<GameNightsController> _logger;
-    
-    
+    private readonly GameNightContext _context;
 
-    public GameNightsController(ILogger<GameNightsController> logger)
+    public GameNightsController(GameNightContext context)
     {
-        _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var user = new User("Stef Rensma", 
-            "stefrensa@gmail.com", 
-            Gender.Man, 
-            new DateOnly(2005, 08, 27),
-            "",
-            new Address(1, "Patrijs", "Barendrecht"));
-        var gameNight = new Evening(1, 2, 8, new DateOnly(2024, 11, 7), "",
-            new Address(2, "Sandelhout", "Barendrecht"));
-        var gameNight2 = new Evening(2, 2, 8, new DateOnly(2024, 11, 7), "",
-            new Address(2, "Sandelhout", "Barendrecht"));
-        List<Evening> gameNightList = new List<Evening>() { gameNight, gameNight2 };
-        return View(gameNightList);
+        var gameNights = await _context.Evenings
+            .Include(e => e.Host)  
+            .Include(e => e.Address)  
+            .Include(e => e.Participants)
+            .ThenInclude(p => p.Participant)  
+            .ToListAsync();
+
+
+        return View(gameNights);
     }
 
     public IActionResult Detailpage(int id)
