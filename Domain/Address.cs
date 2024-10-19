@@ -7,10 +7,8 @@ public class Address
     public string Street { set; get; }
     public string City { set; get; }
 
-    public Address( int houseNumber, string street, string city)
+    public Address()
     {
-        HouseNumber = houseNumber;
-        Street = street;
-        City = city;
+        
     }
 }

@@ -6,6 +6,7 @@ namespace Domain
         {
             Games = new List<EveningGame>();
             Participants = new List<EveningParticipant>();
+            Address = new Address();
         }
         
         

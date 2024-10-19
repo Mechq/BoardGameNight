@@ -2,6 +2,10 @@ namespace Domain;
 
 public class Game
 {
+    public Game()
+    {
+        EveningGames = new List<EveningGame>();
+    }
     public int Id { set; get; }
     public string Name { set; get; }
     public string Description { set; get; }
