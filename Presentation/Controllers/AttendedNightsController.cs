@@ -1,21 +1,31 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Presentation.Data;
 using Presentation.Models;
 
 namespace Presentation.Controllers;
 
 public class AttendedNightsController : Controller
 {
-    private readonly ILogger<AttendedNightsController> _logger;
+    private readonly GameNightContext _context;
 
-    public AttendedNightsController(ILogger<AttendedNightsController> logger)
+    public AttendedNightsController(GameNightContext context)
     {
-        _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var gameNights = await _context.Evenings
+            .Include(e => e.Host)  
+            .Include(e => e.Address)  
+            .Include(e => e.Participants)
+            .ThenInclude(p => p.Participant)  
+            .ToListAsync();
+
+
+        return View(gameNights);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

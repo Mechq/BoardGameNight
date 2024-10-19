@@ -1,24 +1,35 @@
-@{
-    ViewData["Title"] = "Alle Deelgenomen Avonden";
-}
-
-<div class="text-center relative min-h-screen">
-    <h1 class="text-4xl font-bold mb-8">Alle deelgenomen avonden</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+<div class="text-center relative min-h-screen bg-gray-100">
+    <h1 class="text-4xl font-bold mb-8">Alle deelnemende avonden</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 px-4">
         @foreach (var evening in Model)
         {
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                <div class="px-6 py-4">
-                    <h5 class="text-xl font-semibold mb-2">@evening.HostDate.ToString("MMMM dd, yyyy")</h5> <!-- Formatting date -->
-                    <p class="text-gray-700">@evening.Host.Name</p>
-                </div>
-                <div class="px-6 py-4">
-                    <a href="@Url.Action("Detailpage", "GameNights", new { id = evening.Id })" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Details
+            <div class="bg-gradient-to-r from-[#add6ff] to-[#d6eaff] shadow-lg rounded-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                <a href="@Url.Action("Detailpage", "GameNights", new { id = evening.Id })">
+                    <div class="px-6 py-4">
+           
+                        <h5 class="text-lg font-semibold mb-2 text-gray-900">@evening.HostDate.ToString("MMMM dd, yyyy")</h5>
+                        <p class="text-gray-600 font-medium mb-1 flex items-center">
+                            <i class="fas fa-user-circle mr-2"></i>
+                            <span class="font-semibold">@((evening.Host != null) ? evening.Host.Name : "Unknown")</span>
+                        </p>
+                        <p class="text-gray-600 font-medium mb-1 flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span class="font-semibold">@evening.Address.Street + @evening.Address.HouseNumber, @evening.Address.City</span>
+                        </p>
+                        <p class="text-gray-600 font-medium flex items-center">
+                            <i class="fas fa-users mr-2"></i>
+                            <span class="font-semibold">@((evening.Participants != null ? evening.Participants.Count : 0)) / @(evening.MaxUsers > 0 ? evening.MaxUsers.ToString() : "N/A")</span>
+                        </p>
+                
+                    </div>
+                </a>
+                <div class="px-6 py-4 bg-gray-50 flex justify-between">
+                    <a href="@Url.Action("Join", "GameNights", new { id = evening.Id })"
+                       class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                        Aanmelden
                     </a>
-                </div>
+                    </div>
             </div>
         }
     </div>
-    
 </div>

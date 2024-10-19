@@ -1,69 +1,56 @@
 @model Domain.Evening
 
-@{
-ViewData["Title"] = "Create New Game Night";
-}
-
 <div class="max-w-3xl mx-auto p-8 bg-white shadow-xl rounded-lg">
     <h1 class="text-3xl font-semibold text-center text-gray-800 mb-8">Maak een nieuwe avond aan</h1>
 
-    <form asp-action="Create" class="space-y-6">
-        <!-- Host -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form class="max-w-md mx-auto" method="post">
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="date" asp-for="HostDate" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required />
+            <label for="HostDate" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Host Date</label>
+        </div>
 
-            <!-- MaxUsers -->
-            <div>
-                <label for="MaxUsers" class="block text-sm font-medium text-gray-700">Maximum aantal deelnemers</label>
-                <input asp-for="MaxUsers" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="number" min="1" />
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="number" asp-for="MaxUsers" min="1" max="100" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required />
+            <label for="MaxUsers" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Max Users</label>
+        </div>
+
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="text" asp-for="Allergy" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+            <label for="Allergies" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Allergies (Optional)</label>
+        </div>
+
+        <div class="grid md:grid-cols-2 md:gap-6">
+            <div class="relative z-0 w-full mb-5 group">
+                <input type="text" asp-for="Address.Street" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required />
+                <label for="Street" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Street</label>
+            </div>
+            <div class="relative z-0 w-full mb-5 group">
+                <input type="number" asp-for="Address.HouseNumber" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required />
+                <label for="HouseNumber" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">House Number</label>
             </div>
         </div>
 
-        <!-- HostDate -->
-        <div>
-            <label for="HostDate" class="block text-sm font-medium text-gray-700">Datum</label>
-            <input asp-for="HostDate" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="date" />
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="text" asp-for="Address.City" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required />
+            <label for="City" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">City</label>
         </div>
 
-        <!-- Allergy -->
-        <div>
-            <label for="Allergy" class="block text-sm font-medium text-gray-700">Allergieën (i.v.t.)</label>
-            <input asp-for="Allergy" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="text" placeholder="B.v. noten, kaas" />
-        </div>
-
-        <!-- Address -->
-        <fieldset class="border border-gray-300 p-4 rounded-lg">
-            <legend class="text-lg font-medium text-gray-800">Adres</legend>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div class="relative z-0 w-full mb-5 group">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Select Games</p>
+            <div class="h-40 overflow-y-scroll border border-gray-300 rounded-lg p-2">
+                @foreach (var game in ViewBag.AllGames)
+                {
                 <div>
-                    <label for="Address.Street" class="block text-sm font-medium text-gray-700">Straat</label>
-                    <input asp-for="Address.Street" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="text" placeholder="" />
+                    <input type="checkbox" name="Games" id="@("Game" + game.Id)" value="@game.Id" class="form-checkbox text-blue-600 dark:text-blue-500" @(Model.Games.Any(g => g.GameId == game.Id) ? "checked" : "")>
+                    <label for="@("Game" + game.Id)" class="ml-2 text-sm text-gray-900 dark:text-gray-300">@game.Name</label>
                 </div>
-                <div>
-                    <label for="Address.City" class="block text-sm font-medium text-gray-700">Stad</label>
-                    <input asp-for="Address.City" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="text" placeholder="" />
-                </div>
-                <div>
-                    <label for="Address.HouseNumber" class="block text-sm font-medium text-gray-700">Huisnummer</label>
-                    <input asp-for="Address.HouseNumber" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" type="text" placeholder="" />
-                </div>
+                }
             </div>
-        </fieldset>
-
-        <!-- BoardGames -->
-        <div>
-            <label for="BoardGames" class="block text-sm font-medium text-gray-700">Bordspellen</label>
-            <select asp-for="BoardGames" asp-items="ViewBag.BoardGames" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" multiple>
-                <option value="">Selecteer bordspellen</option>
-            </select>
         </div>
 
-        <!-- Submit button -->
-        <div class="flex justify-center">
-            <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-3 px-6 rounded-lg shadow-md">
-                Create Game Night
-            </button>
-        </div>
+        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
     </form>
+
     <a href="@Url.Action("Index", "Host")" class="fixed bottom-6 right-6 bg-[#C70000] hover:bg-red-950 text-white font-bold py-4 px-6 rounded-full shadow-lg">
         Cancel
     </a>
