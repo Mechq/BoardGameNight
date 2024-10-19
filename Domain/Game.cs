@@ -9,4 +9,5 @@ public class Game
     public string ImageURL { set; get; }
     public GameType TypeOfGame { set; get; }
     public bool IsAgeRestricted { set; get; }
+    public List<EveningGame> EveningGames { get; set; }
 }

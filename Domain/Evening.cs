@@ -4,7 +4,7 @@ namespace Domain
     {
         public Evening()
         {
-            BoardGames = new List<Game>();
+            Games = new List<EveningGame>();
             Participants = new List<EveningParticipant>();
         }
         
@@ -26,7 +26,7 @@ namespace Domain
         public DateOnly HostDate { get; set; }
         public string? Allergy { get; set; }
         public Address Address { get; set; }
-        public List<Game> BoardGames { get; set; }
+        public List<EveningGame> Games { get; set; }
         public List<EveningParticipant> Participants { get; set; } 
     }
 

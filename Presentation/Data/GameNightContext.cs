@@ -13,11 +13,11 @@ public class GameNightContext : DbContext
     public DbSet<Game> Games { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<EveningParticipant> EveningParticipants { get; set; }
-
+    public DbSet<EveningGame> EveningGames { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Evening>()
+     modelBuilder.Entity<Evening>()
             .HasOne(e => e.Host)
             .WithMany()
             .HasForeignKey(e => e.HostId)
@@ -38,6 +38,21 @@ public class GameNightContext : DbContext
             .WithMany()
             .HasForeignKey(ep => ep.ParticipantId)
             .OnDelete(DeleteBehavior.Restrict); 
+        
+        
+        modelBuilder.Entity<EveningGame>()
+            .HasKey(eg => new { eg.EveningId, eg.GameId }); 
+
+        modelBuilder.Entity<EveningGame>()
+            .HasOne(eg => eg.Evening)
+            .WithMany(e => e.Games)
+            .HasForeignKey(eg => eg.EveningId);
+
+        modelBuilder.Entity<EveningGame>()
+            .HasOne(eg => eg.Game)
+            .WithMany(g => g.EveningGames)
+            .HasForeignKey(eg => eg.GameId);
+
     }
 
 
