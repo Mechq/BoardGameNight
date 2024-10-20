@@ -13,7 +13,7 @@ public class GameNightContext : DbContext
     public DbSet<Game> Games { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<EveningParticipant> EveningParticipants { get; set; }
-    public DbSet<EveningGame> EveningGames { get; set; }
+    public DbSet<EveningGame> EveningGame  { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -22,7 +22,7 @@ namespace Domain
 
         public int Id { get; set; }
         public int HostId { get; set; }
-        public User Host { get; set; }
+        public User? Host { get; set; }
         public int MaxUsers { get; set; }
         public DateOnly HostDate { get; set; }
         public string? Allergy { get; set; }
