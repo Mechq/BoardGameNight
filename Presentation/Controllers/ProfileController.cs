@@ -38,11 +38,11 @@ namespace Presentation.Controllers
             if (ModelState.IsValid)
             {
                 
-                var user = await _userManager.FindByEmailAsync(model.Email);
+                var user = await _userManager.FindByEmailAsync(model.Email ?? throw new ArgumentNullException(nameof(model.Email)));
                 if (user != null)
                 {
                     
-                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password ?? throw new ArgumentNullException(nameof(model.Password)), model.RememberMe, lockoutOnFailure: false);
 
                     if (result.Succeeded)
                     {
@@ -85,14 +85,14 @@ namespace Presentation.Controllers
                 { 
                     UserName = model.Email, 
                     Email = model.Email, 
-                    Name = model.Name,
+                    Name = model.Name ?? throw new ArgumentNullException(nameof(model.Name)),
                     Gender = model.Gender,
                     DateOfBirth = model.DateOfBirth,
                     Diet = model.Diet,
                     AddressId = model.AddressId
                 }; 
 
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, model.Password?? throw new ArgumentNullException(nameof(model.Password)));
 
                 if (result.Succeeded)
                 {

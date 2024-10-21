@@ -51,7 +51,7 @@
                     <!-- Profile button -->
                     <div class="relative ml-3">
                         <div>
-                            @if (User.Identity.IsAuthenticated)
+                            @if (User.Identity?.IsAuthenticated == true)
                             {
                             <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="profileMenuButton" aria-expanded="false" aria-haspopup="true">
                                 <span class="absolute -inset-1.5"></span>
@@ -61,7 +61,7 @@
 
                             <!-- Dropdown menu -->
                             <div id="profileMenu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 hidden" role="menu" aria-orientation="vertical" aria-labelledby="profileMenuButton" tabindex="-1">
-                                <a href="@Url.Action("Profile", "Home")" class="flex px-4 py-2 rounded-md text-sm text-gray-700 items-center hover:bg-[#add6ff]"  role="menuitem" tabindex="-1" id="user-menu-item-0">
+                                <a href="@Url.Action("Index", "Home")" class="flex px-4 py-2 rounded-md text-sm text-gray-700 items-center hover:bg-[#add6ff]"  role="menuitem" tabindex="-1" id="user-menu-item-0">
                                     <img src="https://static.thenounproject.com/png/2821207-200.png" alt="Profile Icon" class="w-5 h-5 mr-2">
                                     Your Profile
                                 </a>
@@ -74,7 +74,7 @@
                             else
                             {
                             <a asp-controller="Profile" asp-action="Login" asp-area="">
-                                <button type="button" class="relative flex rounded-full bg-indigo-600 text-sm text-white font-bold py-2 px-4 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                <button type="button" class="relative flex rounded-full bg-indigo-600 hover:bg-indigo-700 text-sm text-white font-bold py-2 px-4 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                     <span class="absolute -inset-1.5"></span>
                                     <span class="sr-only">Login</span>
                                     Login

@@ -39,25 +39,11 @@
             <span asp-validation-for="Address.City" class="text-danger"></span>
             </div>
 
-        @*
-        <div class="relative z-0 w-full mb-5 group">
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Select Games</p>
-            <div class="h-40 overflow-y-scroll border border-gray-300 rounded-lg p-2">
-                @foreach (var game in ViewBag.AllGames)
-                {
-                <div>
-                    <input type="checkbox" name="Games" id="@("Game" + game.Id)" value="@game.Id" class="form-checkbox text-blue-600 dark:text-blue-500" @(Model.Games.Any(g => g.GameId == game.Id) ? "checked" : "")>
-                    <label for="@("Game" + game.Id)" class="ml-2 text-sm text-gray-900 dark:text-gray-300">@game.Name</label>
-                </div>
-                }
-            </div>
-        </div>
-        *@
-
-        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Opslaan</button>
+      
+        <button type="submit" class="text-white bg-[#24E0B8] hover:bg-teal-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Opslaan</button>
     </form>
 
-    <a href="@Url.Action("Index", "Host")" class="fixed bottom-6 right-6 bg-[#C70000] hover:bg-red-950 text-white font-bold py-4 px-6 rounded-full shadow-lg">
+    <a href="@Url.Action("Index", "Host")" class="fixed bottom-6 right-6 bg-[#C70000] hover:bg-red-800 text-white font-bold py-4 px-6 rounded-full shadow-lg">
         Cancel
     </a>
 </div>
