@@ -24,10 +24,24 @@ public class GameNightsController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var gameNights = await _gameNightContext.Evenings
-            .Include(e => e.Address)
-            .Include(e => e.Participants)
-            .ToListAsync();
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        IEnumerable<Evening> gameNights;
+        if (userId == null)
+        {
+            gameNights = await _gameNightContext.Evenings
+                .Include(e => e.Address)
+                .Include(e => e.Participants)
+                .ToListAsync();
+        }
+        else
+        {
+            gameNights = await _gameNightContext.Evenings
+                .Include(e => e.Address)
+                .Include(e => e.Participants)
+                .Where(e =>  !e.Participants.Any(p => p.ParticipantId == userId))
+                .ToListAsync();
+        }
+       
 
         var hostIds = gameNights.Select(e => e.HostId).Distinct();
         var hosts = await _identityContext.Users
