@@ -41,6 +41,11 @@ builder.Services.AddAuthentication(options =>
     {
         options.LoginPath = "/Profile/Login"; 
         options.AccessDeniedPath = "/Home/AccessDenied"; 
+        options.Cookie.Name = ".AspNetCore.Identity.Application"; 
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true; 
+        options.Cookie.HttpOnly = true; 
+        options.Cookie.SameSite = SameSiteMode.Lax; 
     });
 
 

@@ -37,11 +37,27 @@ namespace Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-
-                if (result.Succeeded)
+                // Find the user by email
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
                 {
-                    return RedirectToAction("Index", "Home"); 
+                    // Sign in the user using the SignInManager
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+
+                    if (result.Succeeded)
+                    {
+                        Console.WriteLine("User logged in successfully.");
+                        var claims = await _userManager.GetClaimsAsync(user);
+                        foreach (var claim in claims)
+                        {
+                            Console.WriteLine($"Claim: {claim.Type} - {claim.Value}");
+                        }
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    }
                 }
                 else
                 {
@@ -49,8 +65,16 @@ namespace Presentation.Controllers
                 }
             }
 
+            // Logging errors if model state is invalid
+            foreach (var err in ModelState)
+            {
+                Console.WriteLine(err);
+            }
+
             return View(model);
         }
+
+
         
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -68,7 +92,7 @@ namespace Presentation.Controllers
                     Diet = model.Diet,
                     AddressId = model.AddressId
                 }; 
-        
+
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -77,12 +101,21 @@ namespace Presentation.Controllers
                     return RedirectToAction("Index", "Home"); 
                 }
 
+                // Add validation errors to the model state
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
+            if (!ModelState.IsValid)
+            {
+                
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error);
+                }
+            }
             return View(model); 
         }
 

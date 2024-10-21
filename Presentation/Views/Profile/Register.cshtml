@@ -5,50 +5,53 @@
           <img class="mx-auto h-16 w-auto rounded-lg" src="@Url.Content("~/images/Picture1.png")" alt="Your Company">
           <h4 class="text-gray-800 text-base font-semibold mt-6">Maak je account aan</h4>
       </div>
+      <form asp-controller="Profile" asp-action="Register">
+          <div asp-validation-summary="ModelOnly" class="text-red-500"></div>
 
-      <form>
+          @Html.AntiForgeryToken()
           <div class="grid sm:grid-cols-2 gap-8">
               <div>
                   <label asp-for="Name" class="text-gray-800 text-sm mb-2 block">Naam</label>
-                  <input asp-for="Name" name="name" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="" />
+                  <input asp-for="Name" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder=""/>
               </div>
               <div>
                   <label asp-for="Email" class="text-gray-800 text-sm mb-2 block">Email</label>
-                  <input asp-for="Email" name="email" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="" />
+                  <input asp-for="Email" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder=""/>
               </div>
               <div>
                   <label asp-for="Gender" class="text-gray-800 text-sm mb-2 block">Gender</label>
-                  <select asp-for="Gender" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="" >
+                  <select asp-for="Gender" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all">
                       <option value="">Select Gender</option>
                       <option value="Male">Man</option>
-                      <option value="Female">Women</option>
+                      <option value="Female">Woman</option>
                       <option value="Other">Other</option>
                   </select>
+                  <span asp-validation-for="Gender" class="text-red-500 text-sm"></span>
               </div>
               <div>
                   <label asp-for="Diet" class="text-gray-800 text-sm mb-2 block">Allergiën</label>
-                  <input asp-for="Diet" name="diet" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="" />
+                  <input asp-for="Diet" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder=""/>
               </div>
               <div>
                   <label asp-for="AddressId" class="text-gray-800 text-sm mb-2 block">AddressId</label>
-                  <input asp-for="AddressId" name="addressId" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="" />
+                  <input asp-for="AddressId" type="text" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder=""/>
               </div>
               <div>
                   <label asp-for="DateOfBirth" class="block text-gray-700 text-sm font-bold mb-2">Datum</label>
-                  <input asp-for="DateOfBirth" type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                  <input asp-for="DateOfBirth" type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
               </div>
               <div>
                   <label asp-for="Password" class="text-gray-800 text-sm mb-2 block">Wachtwoord</label>
-                  <input asp-for="Password" name="password" type="password" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="" />
+                  <input asp-for="Password" type="password" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder=""/>
               </div>
               <div>
                   <label asp-for="ConfirmPassword" class="text-gray-800 text-sm mb-2 block">Bevestig wachtwoord</label>
-                  <input asp-for="ConfirmPassword" name="cpassword" type="password" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder="" />
+                  <input asp-for="ConfirmPassword" type="password" class="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all" placeholder=""/>
               </div>
           </div>
 
           <div class="!mt-12 mx-auto">
-              <button type="button" class="py-3.5 px-7 text-sm font-semibold tracking-wider rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+              <button type="submit" class="py-3.5 px-7 text-sm font-semibold tracking-wider rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
                   Sign up
               </button>
           </div>
