@@ -1,8 +1,10 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models;
 using System.Threading.Tasks;
 using Domain;
+using Infrastructure.Data;
 using Presentation.ViewModels;
 
 namespace Presentation.Controllers
@@ -11,12 +13,25 @@ namespace Presentation.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        
+        private readonly IdentityContext _identityContext;
 
-
-        public ProfileController(SignInManager<User> signInManager, UserManager<User> userManager)
+        public ProfileController(SignInManager<User> signInManager, UserManager<User> userManager, IdentityContext identityContext)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _identityContext = identityContext;
+        }
+        
+        public async Task<IActionResult> Index()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _identityContext.Users.FindAsync(userId); 
+            if (user == null)
+            {
+                return NotFound(); 
+            }
+            return View(user); 
         }
 
         [HttpGet]

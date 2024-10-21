@@ -1,0 +1,56 @@
+@model Domain.User
+
+<div class="relative min-h-screen bg-cover bg-center" style="background-image: url('https://cartamundi.com/app/uploads/2021/11/filler_image_01.png');">
+    <!-- Background Blur -->
+    <div class="absolute inset-0 bg-black opacity-30"></div>
+    <div class="absolute inset-0 backdrop-blur-sm"></div>
+
+    <div class="flex items-center justify-center min-h-screen relative z-10">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+            <h1 class="text-2xl font-bold text-center text-[#6a9acc]">User Profile</h1>
+            <div class="mt-4 flex items-center">
+                <i class="fas fa-user text-[#6a9acc] mr-2"></i>
+                <div>
+                    <label class="block text-gray-700">Name:</label>
+                    <p class="text-gray-900 font-medium">@Model.Name</p>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center">
+                <i class="fas fa-venus-mars text-[#6a9acc] mr-2"></i>
+                <div>
+                    <label class="block text-gray-700">Gender:</label>
+                    <p class="text-gray-900 font-medium">@Model.Gender.ToString()</p>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center">
+                <i class="fas fa-birthday-cake text-[#6a9acc] mr-2"></i>
+                <div>
+                    <label class="block text-gray-700">Date of Birth:</label>
+                    <p class="text-gray-900 font-medium">@Model.DateOfBirth.ToString("d")</p>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center">
+                <i class="fas fa-carrot text-[#6a9acc] mr-2"></i>
+                <div>
+                    <label class="block text-gray-700">Diet:</label>
+                    <p class="text-gray-900 font-medium">@Model.Diet ?? "N/A"</p>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center">
+                <i class="fas fa-map-marker-alt text-[#6a9acc] mr-2"></i>
+                <div>
+                    <label class="block text-gray-700">Address:</label>
+                    <p class="text-gray-900 font-medium">@Model.Address?.Street ?? "N/A", @Model.Address?.City ?? "N/A"</p>
+                </div>
+            </div>
+            <div class="mt-6">
+                <a href="@Url.Action("Edit", "Profile")" class="w-full flex justify-center bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 rounded-md transition duration-300">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
