@@ -3,38 +3,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 namespace Domain;
-
-public class User
+using Microsoft.AspNetCore.Identity;
+public class User : IdentityUser
 {
     public User() { }
-    
-    
-    public int Id { set; get; }
-    [Column(TypeName = "nvarchar(50)")]
-    public string Name { set; get; }
-    
-    [Column(TypeName = "nvarchar(50)")]
-    public string EmailAddress { set; get; }
-    
-    [Column(TypeName = "nvarchar(50)")]
-    public Gender Gender { set; get; }
-    
-    [Column(TypeName = "date")]
-    public DateOnly DateOfBirth { set; get; }
-    
-    [Column(TypeName = "nvarchar(50)")]
-    public string? Diet { set; get; }
-    
-    [Column(TypeName = "nvarchar(50)")]
-    public Address Address { set; get; }
+    public string Name { get; set; }
+    public Gender Gender { get; set; }
+    public DateOnly DateOfBirth { get; set; }
+    public string? Diet { get; set; }
+    public int? AddressId { get; set; }
+    public Address Address { get; set; }
 
-    public User(string name, string emailAddress, Gender gender, DateOnly dateOfBirth, string diet, Address address)
+    public User(string name, string email, Gender gender, DateOnly dateOfBirth, string diet, int? addressId)
     {
         Name = name;
-        EmailAddress = emailAddress;
+        Email = email;
         Gender = gender;
         DateOfBirth = dateOfBirth;
         Diet = diet;
-        Address = address;
+        AddressId = addressId;
     }
 }

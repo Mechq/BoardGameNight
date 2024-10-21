@@ -1,19 +1,41 @@
-using Presentation.Data;
+using Domain;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddControllersWithViews();
+
+
 builder.Services.AddDbContext<GameNightContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDbContext<IdentityContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
+
+
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+    {
+        
+        options.Password.RequireDigit = false; 
+        options.Password.RequireUppercase = false; 
+        options.Password.RequiredLength = 6; 
+        options.Password.RequireNonAlphanumeric = false; 
+        options.Lockout.AllowedForNewUsers = true;
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    })
+    .AddEntityFrameworkStores<IdentityContext>()
+    .AddDefaultTokenProviders();
+
 var app = builder.Build();  
 
-// Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {   
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -22,8 +44,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
 
+app.UseAuthentication(); 
+app.UseAuthorization();  
+
+// Define the default route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
