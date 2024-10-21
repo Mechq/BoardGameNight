@@ -58,8 +58,9 @@ public class HostController : Controller
 
     public IActionResult CantEdit()
     {
+        //todo add view
         ViewBag.Message = "Minimaal één deelnemer heeft zich al aangemeld voor deze avond. Je kunt de avond niet meer aanpassen.";
-        return View("Index");
+        return View();
     }
 
 
