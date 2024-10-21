@@ -16,14 +16,12 @@ builder.Services.AddDbContext<GameNightContext>(options =>
 builder.Services.AddDbContext<IdentityContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
 
-
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
-        
-        options.Password.RequireDigit = false; 
-        options.Password.RequireUppercase = false; 
         options.Password.RequiredLength = 6; 
-        options.Password.RequireNonAlphanumeric = false; 
+        options.Password.RequireDigit = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
         options.Lockout.AllowedForNewUsers = true;
         options.Lockout.MaxFailedAccessAttempts = 5;
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
@@ -31,22 +29,20 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddEntityFrameworkStores<IdentityContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    })
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Profile/Login"; 
-        options.AccessDeniedPath = "/Home/AccessDenied"; 
-        options.Cookie.Name = ".AspNetCore.Identity.Application"; 
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        options.SlidingExpiration = true; 
-        options.Cookie.HttpOnly = true; 
-        options.Cookie.SameSite = SameSiteMode.Lax; 
-    });
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Profile/Login"; 
+    options.AccessDeniedPath = "/Home/AccessDenied";
+    options.Cookie.Name = ".AspNetCore.Identity.Application"; 
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.SlidingExpiration = true; 
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+
 
 
 var app = builder.Build();  

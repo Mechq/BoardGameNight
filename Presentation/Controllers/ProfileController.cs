@@ -37,21 +37,20 @@ namespace Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Find the user by email
+                
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null)
                 {
-                    // Sign in the user using the SignInManager
+                    
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
 
                     if (result.Succeeded)
                     {
                         Console.WriteLine("User logged in successfully.");
-                        var claims = await _userManager.GetClaimsAsync(user);
-                        foreach (var claim in claims)
-                        {
-                            Console.WriteLine($"Claim: {claim.Type} - {claim.Value}");
-                        }
+
+                        
+                        await _signInManager.SignInAsync(user, isPersistent: model.RememberMe);
+
                         return RedirectToAction("Index", "Home");
                     }
                     else
