@@ -1,7 +1,8 @@
 using Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Presentation.Data;
+namespace Infrastructure.Data;
 
 public class GameNightContext : DbContext
 {
@@ -9,7 +10,6 @@ public class GameNightContext : DbContext
     {
     }
     public DbSet<Evening> Evenings { get; set; }
-    public DbSet<User> Users { get; set; }
     public DbSet<Game> Games { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<EveningParticipant> EveningParticipants { get; set; }
@@ -17,31 +17,41 @@ public class GameNightContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-     modelBuilder.Entity<Evening>()
-            .HasOne(e => e.Host)
-            .WithMany()
-            .HasForeignKey(e => e.HostId)
-            .OnDelete(DeleteBehavior.Restrict); 
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Address>().Ignore(a => a.Users);
+
+        
+        modelBuilder.Entity<Evening>()
+            .Property(e => e.HostId)
+            .IsRequired();  
+
+        
+        modelBuilder.Entity<Evening>()
+            .HasOne(e => e.Address) 
+            .WithMany()  
+            .HasForeignKey(e => e.AddressId)  
+            .OnDelete(DeleteBehavior.Restrict);
+
 
         
         modelBuilder.Entity<EveningParticipant>()
-            .HasKey(ep => new { ep.EveningId, ep.ParticipantId }); 
+            .HasKey(ep => new { ep.EveningId, ep.ParticipantId });
 
         modelBuilder.Entity<EveningParticipant>()
             .HasOne(ep => ep.Evening)
-            .WithMany(e => e.Participants) 
+            .WithMany(e => e.Participants)
             .HasForeignKey(ep => ep.EveningId)
-            .OnDelete(DeleteBehavior.Restrict); 
+            .OnDelete(DeleteBehavior.Restrict);
 
+        
         modelBuilder.Entity<EveningParticipant>()
-            .HasOne(ep => ep.Participant)
-            .WithMany()
-            .HasForeignKey(ep => ep.ParticipantId)
-            .OnDelete(DeleteBehavior.Restrict); 
-        
-        
+            .Property(ep => ep.ParticipantId)
+            .IsRequired();  
+
+        // EveningGame entity
         modelBuilder.Entity<EveningGame>()
-            .HasKey(eg => new { eg.EveningId, eg.GameId }); 
+            .HasKey(eg => new { eg.EveningId, eg.GameId });
 
         modelBuilder.Entity<EveningGame>()
             .HasOne(eg => eg.Evening)
@@ -52,8 +62,8 @@ public class GameNightContext : DbContext
             .HasOne(eg => eg.Game)
             .WithMany(g => g.EveningGames)
             .HasForeignKey(eg => eg.GameId);
-
     }
+
 
 
 }
