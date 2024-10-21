@@ -6,7 +6,6 @@ namespace Domain
         {
             Games = new List<EveningGame>();
             Participants = new List<EveningParticipant>();
-            Address = new Address();
         }
         
         public Evening(int id, string hostId, int maxUsers, DateOnly hostDate, string? allergy, Address address)
@@ -20,7 +19,7 @@ namespace Domain
         }
 
         public int Id { get; set; }
-        public string HostId { get; set; }
+        public string? HostId { get; set; }
         public int MaxUsers { get; set; }
         public DateOnly HostDate { get; set; }
         public string? Allergy { get; set; }

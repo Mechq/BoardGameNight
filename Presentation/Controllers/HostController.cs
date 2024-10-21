@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Domain;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -23,9 +24,13 @@ public class HostController : Controller
 
     public async Task<IActionResult> Index()
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        
         var gameNights = await _gameNightContext.Evenings
             .Include(e => e.Address)
             .Include(e => e.Participants)
+            .Where(e => e.HostId == userId)
             .ToListAsync();
 
         var hostIds = gameNights.Select(e => e.HostId).Distinct();
@@ -51,7 +56,11 @@ public class HostController : Controller
         return View(gameNightsWithDetails);  
     }
 
-
+    public IActionResult CantEdit()
+    {
+        ViewBag.Message = "Minimaal één deelnemer heeft zich al aangemeld voor deze avond. Je kunt de avond niet meer aanpassen.";
+        return View("Index");
+    }
 
 
     public async Task<IActionResult> Form(int? id)
@@ -65,94 +74,83 @@ public class HostController : Controller
         else
         {
             
-            /*evening = await _context.Evenings
-                .Include(e => e.Host)
+            evening = await _gameNightContext.Evenings
                 .Include(e => e.Address)
-                .Include(e => e.Participants)
-                .ThenInclude(ep => ep.Participant)
-                .Include(e => e.Games)
                 .FirstOrDefaultAsync(e => e.Id == id);
-
-            if (evening == null)
-            {
-                return NotFound();
-            }*/
         }
-        /*ViewBag.AllGames = await _context.Games
-            .Select(g => new 
-            {
-                Id = (int)g.Id, // Cast to int explicitly
-                g.Name,
-                g.Description,
-                g.Genre,
-                g.ImageURL,
-                g.IsAgeRestricted,
-                g.TypeOfGame
-            })
-            .ToListAsync();*/
-        /*ViewBag.AllGames = await _context.Games.ToListAsync();*/
     
         return View(evening);
     }
     
-    /*[HttpPost]
+    [HttpPost]
     public async Task<IActionResult> Form(Evening evening)
     {
         
-        /*Console.WriteLine($"HostId: {evening.HostId}");
-
-        
-        var host = await _context.Users.FindAsync(evening.HostId);
-        if (host == null)
-        {
-            ModelState.AddModelError("HostId", "The selected host does not exist.");
-            return View(evening); 
-        }
-
-        
-        evening.Host = host;
-        #1#
-
-        
         if (ModelState.IsValid)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             
-            if (evening.Id == 0)
+            var address = new Address
             {
-                _context.Evenings.Add(evening);
+                Street = evening.Address.Street,
+                City = evening.Address.City,
+                HouseNumber = evening.Address.HouseNumber
+            };
+            
+            if (evening.AddressId > 0) 
+            {
+                var existingAddress = await _gameNightContext.Addresses.FindAsync(evening.AddressId);
+                if (existingAddress != null)
+                {
+                    existingAddress.Street = address.Street;
+                    existingAddress.City = address.City;
+                    existingAddress.HouseNumber = address.HouseNumber;
+                    await _gameNightContext.SaveChangesAsync();
+                }
             }
             else
             {
-                var existingEvening = await _context.Evenings.FindAsync(evening.Id);
-                if (existingEvening == null)
-                {
-                    return NotFound();
-                }
-
-                /*existingEvening.HostId = evening.HostId;
-                existingEvening.Host = evening.Host; 
-                existingEvening.MaxUsers = evening.MaxUsers;
-                existingEvening.HostDate = evening.HostDate;
-                existingEvening.Allergy = evening.Allergy;
-                existingEvening.Address = evening.Address;#1#
+                _gameNightContext.Addresses.Add(address);
+                await _gameNightContext.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+            Evening? newEvening;
+            
+            if (evening.Id > 0) 
+            {
+                newEvening = await _gameNightContext.Evenings.FindAsync(evening.Id);
+                if (newEvening == null)
+                {
+                    return NotFound(); 
+                }
+               
+                newEvening.HostId = userId ?? throw new InvalidOperationException("User must be logged in.");
+                newEvening.HostDate = evening.HostDate;
+                newEvening.MaxUsers = evening.MaxUsers;
+                newEvening.Allergy = evening.Allergy;
+                newEvening.AddressId = address.Id;
+            }
+            else
+            {
+                newEvening = new Evening
+                {
+                    HostId = userId ?? throw new InvalidOperationException("User must be logged in."),
+                    HostDate = evening.HostDate,
+                    MaxUsers = evening.MaxUsers,
+                    Allergy = evening.Allergy,
+                    AddressId = address.Id
+                };
+                await _gameNightContext.Evenings.AddAsync(newEvening);
+            }
+
+            
+            
+            await _gameNightContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        
-        foreach (var state in ModelState)
-        {
-            foreach (var error in state.Value.Errors)
-            {
-                Console.WriteLine($"Field: {state.Key}, Error: {error.ErrorMessage}");
-            }
-        }
-
-        
         return View(evening);
-    }*/
+    }
 
 
 
