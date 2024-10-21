@@ -1,8 +1,11 @@
+@model IEnumerable<Presentation.ViewModels.GameNightViewModel>
+
 <div class="text-center relative min-h-screen bg-gray-100">
     <h1 class="text-4xl font-bold mb-8">Alle georganiseerde avonden</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 px-4">
-        @foreach (var evening in Model)
+        @foreach (var eveningViewModel in Model)
         {
+        var evening = eveningViewModel.GameNight;
         <div class="bg-gradient-to-r from-[#add6ff] to-[#d6eaff] shadow-lg rounded-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
             <a href="@Url.Action("Detailpage", "GameNights", new { id = evening.Id })">
                 <div class="px-6 py-4">
@@ -10,15 +13,15 @@
                     <h5 class="text-lg font-semibold mb-2 text-gray-900">@evening.HostDate.ToString("MMMM dd, yyyy")</h5>
                     <p class="text-gray-600 font-medium mb-1 flex items-center">
                         <i class="fas fa-user-circle mr-2"></i>
-                        <span class="font-semibold">@((evening.Host != null) ? evening.Host.Name : "Unknown")</span>
+                        <span class="font-semibold">@((eveningViewModel.Host != null) ? eveningViewModel.Host.Name : "Unknown")</span>
                     </p>
                     <p class="text-gray-600 font-medium mb-1 flex items-center">
                         <i class="fas fa-map-marker-alt mr-2"></i>
-                        <span class="font-semibold">@evening.Address.Street + @evening.Address.HouseNumber, @evening.Address.City</span>
+                        <span class="font-semibold">@evening.Address.Street @evening.Address.HouseNumber, @evening.Address.City</span>
                     </p>
                     <p class="text-gray-600 font-medium flex items-center">
                         <i class="fas fa-users mr-2"></i>
-                        <span class="font-semibold">@((evening.Participants != null ? evening.Participants.Count : 0)) / @(evening.MaxUsers > 0 ? evening.MaxUsers.ToString() : "N/A")</span>
+                        <span class="font-semibold">@((eveningViewModel.Participants != null ? eveningViewModel.Participants.Count : 0)) / @(evening.MaxUsers > 0 ? evening.MaxUsers.ToString() : "N/A")</span>
                     </p>
 
                 </div>
@@ -32,9 +35,7 @@
         </div>
         }
     </div>
- 
-    
-    
+
     <a href="@Url.Action("Form", "Host")" class="fixed bottom-6 right-6 bg-[#24E0B8] hover:bg-teal-500 text-white font-bold py-4 px-6 rounded-full shadow-lg">
         + Nieuwe Avond
     </a>

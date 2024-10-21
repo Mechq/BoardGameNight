@@ -1,33 +1,56 @@
 using System.Diagnostics;
 using Domain;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Data;
 using Presentation.Models;
+using Presentation.ViewModels;
 
 namespace Presentation.Controllers;
 
 public class HostController : Controller
 {
-    private readonly GameNightContext _context;
+    private readonly GameNightContext _gameNightContext;
+    private readonly IdentityContext _identityContext;
 
-    public HostController(GameNightContext context)
+    public HostController(GameNightContext gameNightContext, IdentityContext identityContext)
     {
-        _context = context;
+        _gameNightContext = gameNightContext;
+        _identityContext = identityContext;
     }
 
     public async Task<IActionResult> Index()
     {
-        var gameNights = await _context.Evenings
-            .Include(e => e.Host)  
-            .Include(e => e.Address)  
+        var gameNights = await _gameNightContext.Evenings
+            .Include(e => e.Address)
             .Include(e => e.Participants)
-            .ThenInclude(p => p.Participant)  
             .ToListAsync();
 
+        var hostIds = gameNights.Select(e => e.HostId).Distinct();
+        var hosts = await _identityContext.Users
+            .Where(u => hostIds.Contains(u.Id))
+            .ToListAsync();
 
-        return View(gameNights);
+        var participantIds = gameNights.SelectMany(e => e.Participants.Select(p => p.ParticipantId)).Distinct();
+        var participants = await _identityContext.Users
+            .Where(u => participantIds.Contains(u.Id))
+            .ToListAsync();
+
+        
+        var gameNightsWithDetails = gameNights.Select(gameNight => new GameNightViewModel
+        {
+            GameNight = gameNight,
+            Host = hosts.FirstOrDefault(u => u.Id == gameNight.HostId) ?? new User { Name = "Unknown" }, 
+            Participants = gameNight.Participants
+                .Select(p => participants.FirstOrDefault(u => u.Id == p.ParticipantId) ?? new User { Name = "Unknown" }) 
+                .ToList()
+        }).ToList();
+
+        return View(gameNightsWithDetails);  
     }
+
+
+
 
     public async Task<IActionResult> Form(int? id)
     {
@@ -40,7 +63,7 @@ public class HostController : Controller
         else
         {
             
-            evening = await _context.Evenings
+            /*evening = await _context.Evenings
                 .Include(e => e.Host)
                 .Include(e => e.Address)
                 .Include(e => e.Participants)
@@ -51,7 +74,7 @@ public class HostController : Controller
             if (evening == null)
             {
                 return NotFound();
-            }
+            }*/
         }
         /*ViewBag.AllGames = await _context.Games
             .Select(g => new 
@@ -70,11 +93,11 @@ public class HostController : Controller
         return View(evening);
     }
     
-    [HttpPost]
+    /*[HttpPost]
     public async Task<IActionResult> Form(Evening evening)
     {
         
-        Console.WriteLine($"HostId: {evening.HostId}");
+        /*Console.WriteLine($"HostId: {evening.HostId}");
 
         
         var host = await _context.Users.FindAsync(evening.HostId);
@@ -86,6 +109,7 @@ public class HostController : Controller
 
         
         evening.Host = host;
+        #1#
 
         
         if (ModelState.IsValid)
@@ -103,12 +127,12 @@ public class HostController : Controller
                     return NotFound();
                 }
 
-                existingEvening.HostId = evening.HostId;
+                /*existingEvening.HostId = evening.HostId;
                 existingEvening.Host = evening.Host; 
                 existingEvening.MaxUsers = evening.MaxUsers;
                 existingEvening.HostDate = evening.HostDate;
                 existingEvening.Allergy = evening.Allergy;
-                existingEvening.Address = evening.Address;
+                existingEvening.Address = evening.Address;#1#
             }
 
             await _context.SaveChangesAsync();
@@ -126,7 +150,7 @@ public class HostController : Controller
 
         
         return View(evening);
-    }
+    }*/
 
 
 

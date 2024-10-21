@@ -1,7 +1,7 @@
 using System.Diagnostics;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Data;
 using Presentation.Models;
 
 namespace Presentation.Controllers;
@@ -17,15 +17,15 @@ public class AttendedNightsController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var gameNights = await _context.Evenings
+        /*var gameNights = await _context.Evenings
             .Include(e => e.Host)  
             .Include(e => e.Address)  
             .Include(e => e.Participants)
             .ThenInclude(p => p.Participant)  
-            .ToListAsync();
+            .ToListAsync();*/
 
 
-        return View(gameNights);
+        return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

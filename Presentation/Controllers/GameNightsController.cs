@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Domain;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Data;
 using Presentation.Models;
 
 namespace Presentation.Controllers;
@@ -18,15 +18,15 @@ public class GameNightsController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var gameNights = await _context.Evenings
+        /*var gameNights = await _context.Evenings
             .Include(e => e.Host)  
             .Include(e => e.Address)  
             .Include(e => e.Participants)
             .ThenInclude(p => p.Participant)  
-            .ToListAsync();
+            .ToListAsync();*/
 
 
-        return View(gameNights);
+        return View();
     }
 
     public async Task<IActionResult> Detailpage(int id)
@@ -37,7 +37,7 @@ public class GameNightsController : Controller
         }
 
         
-        var evening = await _context.Evenings
+        /*var evening = await _context.Evenings
             .Include(e => e.Host) 
             .Include(e => e.Address) 
             .Include(e => e.Participants) 
@@ -49,7 +49,8 @@ public class GameNightsController : Controller
             return NotFound();
         }
 
-        return View(evening);
+        return View(evening);*/
+        return View();
     }
 
 
