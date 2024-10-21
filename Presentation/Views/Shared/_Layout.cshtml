@@ -4,7 +4,11 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Presentation</title>
-  
+    @section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    }
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
 
@@ -30,7 +34,7 @@
                 <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                     <div class="flex flex-shrink-0 items-center">
                         <a asp-controller="Home" asp-action="Index" asp-area="">
-                        <img class="h-8 w-auto rounded-lg" src="images/Picture1.png" alt="Your Company">
+                        <img class="h-8 w-auto rounded-lg"  src="@Url.Content("~/images/Picture1.png")" alt="Your Company">
                         </a>
                     </div>
                     <div class="hidden sm:ml-6 sm:block">
@@ -42,20 +46,49 @@
                     </div>
                 </div>
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                    
+                    
                     <!-- Profile button -->
                     <div class="relative ml-3">
                         <div>
-                            <a asp-controller="Home" asp-action="Profile" asp-area="">
-
-                            <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                            <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="profileMenuButton" aria-expanded="false" aria-haspopup="true">
                                 <span class="absolute -inset-1.5"></span>
-                                <span class="sr-only">Profile</span>
-                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-8 w-8 rounded-full"  src="@Url.Content("~/images/profile-icon-design-free-vector.jpg")" alt="">
                             </button>
+
+                            <!-- Dropdown menu -->
+                            <div id="profileMenu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 hidden" role="menu" aria-orientation="vertical" aria-labelledby="profileMenuButton" tabindex="-1">
+                                <a href="@Url.Action("Profile", "Home")" class="flex px-4 py-2 text-sm text-gray-700 items-center hover:bg-indigo-600"  role="menuitem" tabindex="-1" id="user-menu-item-0">
+                                    <img src="https://static.thenounproject.com/png/2821207-200.png" alt="Profile Icon" class="w-5 h-5 mr-2">
+                                    Your Profile
+                                </a>
+                                <a href="@Url.Action("Logout", "Profile")" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 items-center" role="menuitem" tabindex="-1" id="user-menu-item-1">
+                                    <img src="https://static-00.iconduck.com/assets.00/log-out-icon-2048x2048-cru8zabe.png" alt="Sign Out Icon" class="w-5 h-5 mr-2">
+                                    Sign out
+                                </a>
+                            </div>
+                            }
+                            else
+                            {
+                            <a asp-controller="Profile" asp-action="Login" asp-area="">
+                                <button type="button" class="relative flex rounded-full bg-indigo-600 text-sm text-white font-bold py-2 px-4 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                    <span class="absolute -inset-1.5"></span>
+                                    <span class="sr-only">Login</span>
+                                    Login
+                                </button>
                             </a>
+                            }
                         </div>
                     </div>
+                    
+                    
                 </div>
+
+                
+                
             </div>
         </div>
 
@@ -136,6 +169,24 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    document.addEventListener('click', function(event) {
+        var menu = document.getElementById('profileMenu');
+        var button = document.getElementById('profileMenuButton');
+
+                if (!menu.contains(event.target) && !button.contains(event.target)) {
+            menu.classList.add('hidden');
+        }
+    });
+
+    document.getElementById('profileMenuButton').addEventListener('click', function(event) {
+        var menu = document.getElementById('profileMenu');
+        menu.classList.toggle('hidden');
+
+    
+        event.stopPropagation();
+    });
+</script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
