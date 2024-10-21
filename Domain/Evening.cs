@@ -9,11 +9,10 @@ namespace Domain
             Address = new Address();
         }
         
-        
-        public Evening(int id, int hostId, int maxUsers, DateOnly hostDate, string? allergy, Address address)
+        public Evening(int id, string hostId, int maxUsers, DateOnly hostDate, string? allergy, Address address)
         {
             Id = id;
-            HostId = hostId;
+            HostId = hostId; 
             MaxUsers = maxUsers;
             HostDate = hostDate;
             Allergy = allergy;
@@ -21,14 +20,14 @@ namespace Domain
         }
 
         public int Id { get; set; }
-        public int HostId { get; set; }
-        public User? Host { get; set; }
+        public string HostId { get; set; }
         public int MaxUsers { get; set; }
         public DateOnly HostDate { get; set; }
         public string? Allergy { get; set; }
         public Address Address { get; set; }
+        public int AddressId { get; set; }  
+
         public List<EveningGame> Games { get; set; }
         public List<EveningParticipant> Participants { get; set; } 
     }
-
 }
