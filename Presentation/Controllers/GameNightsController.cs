@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Domain;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Models;
@@ -48,6 +50,15 @@ public class GameNightsController : Controller
         }).ToList();
 
         return View(gameNightsWithDetails);  
+    }
+    
+    [Authorize]
+    public  IActionResult Join(int eveningId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
+        _gameNightContext.EveningParticipants.Add(new EveningParticipant { EveningId = eveningId, ParticipantId = userId });
+        _gameNightContext.SaveChanges();
+        return RedirectToAction("Index");
     }
 
     public async Task<IActionResult> Detailpage(int id)

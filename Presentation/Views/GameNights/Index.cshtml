@@ -27,10 +27,17 @@
                 </div>
             </a>
             <div class="px-6 py-4 bg-gray-50 flex justify-between">
-                <a href="@Url.Action("Join", "GameNights", new { id = evening?.Id })"
+                @if (evening != null)
+                {
+                <a href="@Url.Action("Join", "GameNights", new { eveningId = evening.Id })"
                    class="bg-[#6a9acc] hover:bg-[#4f7499] text-white font-bold py-2 px-4 rounded-full transition duration-300">
                     Aanmelden
                 </a>
+                }
+                else
+                {
+                <span class="text-gray-500">Evening not available</span>
+                }
             </div>
         </div>
         }
