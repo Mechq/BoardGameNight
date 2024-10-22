@@ -104,43 +104,66 @@ namespace Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrWhiteSpace(model.Street))
+                {
+                    ModelState.AddModelError(nameof(model.Street), "Street is required.");
+                    return View(model);
+                }
+                if (string.IsNullOrWhiteSpace(model.City))
+                {
+                    ModelState.AddModelError(nameof(model.City), "City is required.");
+                    return View(model);
+                }
+                if (string.IsNullOrWhiteSpace(model.Name))
+                {
+                    ModelState.AddModelError(nameof(model.Name), "Name is required.");
+                    return View(model);
+                }
+                if (string.IsNullOrWhiteSpace(model.Password))
+                {
+                    ModelState.AddModelError(nameof(model.Password), "Password is required.");
+                    return View(model);
+                }
+                
                 var address = new Address
                 {
-                    Street = model.Street ?? throw new ArgumentNullException(nameof(model.Street)),
-                    City = model.City ?? throw new ArgumentNullException(nameof(model.City)),
+                    Street = model.Street,
+                    City = model.City,
                     HouseNumber = model.HouseNumber
                 };
                 await _identityContext.Addresses.AddAsync(address);
                 await _identityContext.SaveChangesAsync(); 
+
                 
                 var user = new User 
                 { 
                     UserName = model.Email, 
                     Email = model.Email, 
-                    Name = model.Name ?? throw new ArgumentNullException(nameof(model.Name)),
+                    Name = model.Name,
                     Gender = model.Gender,
                     DateOfBirth = model.DateOfBirth,
-                    Diet = model.Diet,
+                    Diet = model.Diet, 
                     AddressId = address.Id
                 }; 
 
-                var result = await _userManager.CreateAsync(user, model.Password?? throw new ArgumentNullException(nameof(model.Password)));
-
+                
+                var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home"); 
+                    return RedirectToAction("Index", "Home");
                 }
 
-                // Add validation errors to the model state
+                
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-           
+    
             return View(model); 
         }
+
 
         
         

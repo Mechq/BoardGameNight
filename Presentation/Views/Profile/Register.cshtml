@@ -1,10 +1,10 @@
 @model Presentation.ViewModels.RegisterViewModel
 
 <div class="max-w-4xl mx-auto font-[sans-serif] p-6">
-      <div class="text-center mb-16">
-          <img class="mx-auto h-16 w-auto rounded-lg" src="@Url.Content("~/images/Picture1.png")" alt="Your Company">
-          <h4 class="text-gray-800 text-base font-semibold mt-6">Maak je account aan</h4>
-      </div>
+    <div class="text-center mb-16">
+        <img class="mx-auto h-16 w-auto rounded-lg" src="@Url.Content("~/images/Picture1.png")" alt="Your Company">
+        <h4 class="text-gray-800 text-base font-semibold mt-6">Maak je account aan</h4>
+    </div>
     <form asp-controller="Profile" asp-action="Register" class="space-y-6">
         <div asp-validation-summary="ModelOnly" class="text-red-500"></div>
 
@@ -31,7 +31,7 @@
                     <select asp-for="Gender" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                         <option value="">Select Gender</option>
                         <option value="Man">Man</option>
-                        <option value="Man">Man</option>
+                        <option value="Woman">Woman</option>
                         <option value="Other">Other</option>
                     </select>
                     <span asp-validation-for="Gender" class="text-red-500 text-sm"></span>
@@ -39,9 +39,42 @@
             </div>
 
             <div>
-                <label asp-for="Diet" class="block text-sm font-medium leading-6 text-gray-900">Allergiën</label>
-                <div class="mt-2">
-                    <input asp-for="Diet" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder=""/>
+                <label asp-for="Diet" class="block text-sm font-medium leading-6 text-gray-900">Allergiën/Vegetarisch/Alcohol</label>
+                <div class="relative mt-2">
+                    <button id="diet-button" class="w-full py-2 px-3 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Select Diet Options
+                    </button>
+
+                    <div id="diet-dropdown" class="hidden absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+                        <div class="p-2 max-h-60 overflow-y-auto">
+                            <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                                <input type="checkbox" value="Vegetarisch" class="mr-2" onchange="updateHiddenInput()">
+                                <span>Vegetarisch</span>
+                            </label>
+                            <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                                <input type="checkbox" value="Veganistisch" class="mr-2" onchange="updateHiddenInput()">
+                                <span>Veganistisch</span>
+                            </label>
+                            <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                                <input type="checkbox" value="Lactose-intolerant" class="mr-2" onchange="updateHiddenInput()">
+                                <span>Lactose-intolerant</span>
+                            </label>
+                            <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                                <input type="checkbox" value="Gluten-intolerant" class="mr-2" onchange="updateHiddenInput()">
+                                <span>Gluten-intolerant</span>
+                            </label>
+                            <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                                <input type="checkbox" value="Notenallergie" class="mr-2" onchange="updateHiddenInput()">
+                                <span>Notenallergie</span>
+                            </label>
+                            <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                                <input type="checkbox" value="Alcoholvrij" class="mr-2" onchange="updateHiddenInput()">
+                                <span>Alcoholvrij</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <input type="hidden" asp-for="Diet" id="diet-hidden" />
                 </div>
             </div>
 
@@ -98,3 +131,28 @@
         <a asp-controller="Profile" asp-action="Login" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Login</a>
     </p>
 </div>
+
+<script>
+    document.getElementById('diet-button').onclick = function () {
+        const dropdown = document.getElementById('diet-dropdown');
+        dropdown.classList.toggle('hidden');
+    };
+
+    function updateHiddenInput() {
+        const checkboxes = document.querySelectorAll('#diet-dropdown input[type="checkbox"]');
+        const selectedOptions = Array.from(checkboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
+
+        document.getElementById('diet-hidden').value = selectedOptions.join(', ');
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.matches('#diet-button') && !event.target.closest('#diet-dropdown')) {
+            const dropdown = document.getElementById('diet-dropdown');
+            if (!dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+            }
+        }
+    };
+</script>
