@@ -1,8 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Models;
-using System.Threading.Tasks;
 using Domain;
 using Infrastructure.Data;
 using Presentation.ViewModels;
@@ -27,11 +25,21 @@ namespace Presentation.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await _identityContext.Users.FindAsync(userId); 
+            
+            
+            
             if (user == null)
             {
                 return NotFound(); 
             }
-            return View(user); 
+            var address = await _identityContext.Addresses.FindAsync(user.AddressId);
+            ProfileViewModel profileViewModel = new ProfileViewModel
+            {
+                User = user,
+                Address = address?? new Address()
+            };
+            
+            return View(profileViewModel); 
         }
 
         [HttpGet]
@@ -96,6 +104,15 @@ namespace Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
+                var address = new Address
+                {
+                    Street = model.Street ?? throw new ArgumentNullException(nameof(model.Street)),
+                    City = model.City ?? throw new ArgumentNullException(nameof(model.City)),
+                    HouseNumber = model.HouseNumber
+                };
+                await _identityContext.Addresses.AddAsync(address);
+                await _identityContext.SaveChangesAsync(); 
+                
                 var user = new User 
                 { 
                     UserName = model.Email, 
@@ -104,7 +121,7 @@ namespace Presentation.Controllers
                     Gender = model.Gender,
                     DateOfBirth = model.DateOfBirth,
                     Diet = model.Diet,
-                    AddressId = model.AddressId
+                    AddressId = address.Id
                 }; 
 
                 var result = await _userManager.CreateAsync(user, model.Password?? throw new ArgumentNullException(nameof(model.Password)));

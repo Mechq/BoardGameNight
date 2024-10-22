@@ -3,6 +3,6 @@ namespace Domain;
 public enum Gender
 {
     Man,
-    Women,
+    Woman,
     Other
 }

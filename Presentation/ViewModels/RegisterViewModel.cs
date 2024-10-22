@@ -30,6 +30,13 @@ namespace Presentation.ViewModels
 
         public string? Diet { get; set; }
 
-        public int? AddressId { get; set; }
+        [Required(ErrorMessage = "Street is required.")]
+        public string? Street { get; set; }
+
+        [Required(ErrorMessage = "City is required.")]
+        public string? City { get; set; }
+
+        [Required(ErrorMessage = "House number is required.")]
+        public int HouseNumber { get; set; }
     }
 }
