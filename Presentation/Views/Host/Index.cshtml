@@ -10,17 +10,23 @@
             <a href="@Url.Action("Detailpage", "GameNights", new { id = evening?.Id })">
                 <div class="px-6 py-4">
 
-                    <h5 class="text-lg font-semibold mb-2 text-gray-900">@evening?.HostDate.ToString("MMMM dd, yyyy")</h5>
+                    <h5 class="text-lg font-semibold mb-2 text-gray-900 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 text-[#6a9acc]"></i>
+                        @evening?.HostDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("nl-NL"))
+                    </h5>
+
                     <p class="text-gray-600 font-medium mb-1 flex items-center">
-                        <i class="fas fa-user-circle mr-2"></i>
-                        <span class="font-semibold">@((eveningViewModel.Host != null) ? eveningViewModel.Host.Name : "Unknown")</span>
+                        <i class="fas fa-user-circle mr-2 text-[#6a9acc]"></i>
+                        <span class="font-semibold">@((eveningViewModel.Host != null) ? eveningViewModel.Host.Name : "Onbekend")</span>
                     </p>
+
                     <p class="text-gray-600 font-medium mb-1 flex items-center">
-                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        <i class="fas fa-map-marker-alt mr-2 text-[#6a9acc]"></i>
                         <span class="font-semibold">@evening?.Address.Street @evening?.Address.HouseNumber, @evening?.Address.City</span>
                     </p>
+
                     <p class="text-gray-600 font-medium flex items-center">
-                        <i class="fas fa-users mr-2"></i>
+                        <i class="fas fa-users mr-2 text-[#6a9acc]"></i>
                         <span class="font-semibold">@((eveningViewModel.Participants != null ? eveningViewModel.Participants.Count : 0)) / @(evening?.MaxUsers > 0 ? evening.MaxUsers.ToString() : "N/A")</span>
                     </p>
 

@@ -16,7 +16,8 @@
             <!-- Date and Time -->
             <div class="mt-4">
                 <h2 class="text-xl font-semibold text-[#6a9acc]">Datum:</h2>
-                <p class="text-gray-900 text-lg">@Model.GameNight?.HostDate.ToString("d")</p>
+                <p class="text-gray-900 text-lg">@Model.GameNight?.HostDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("nl-NL"))
+                </p>
             </div>
 
             <!-- Address -->
