@@ -1,3 +1,4 @@
+@using System.Security.Claims
 @model Presentation.ViewModels.GameNightViewModel
 
 
@@ -21,7 +22,7 @@
             <!-- Address -->
             <div class="mt-4">
                 <h2 class="text-xl font-semibold text-[#6a9acc]">Location:</h2>
-                <p class="text-gray-900 text-lg">@Model.GameNight?.Address?.Street, @Model.GameNight?.Address?.City</p>
+                <p class="text-gray-900 text-lg">@Model.GameNight?.Address?.Street @Model.GameNight?.Address?.HouseNumber, @Model.GameNight?.Address?.City</p>
             </div>
 
             <!-- Allergy Info -->
@@ -66,18 +67,37 @@
                 }
             </div>
 
+
+            <div class="flex items-center justify-content-around gap-4 mt-6">
+
+            @if (!Model.Participants.Any(p => p.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)))
+            {
             <!-- Join Button -->
-            <div class="mt-6">
+            <div class="p-4">
                 <a href="@Url.Action("Join", "GameNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
-                    Join Game Night
+                    Aanmelden
                 </a>
             </div>
-
-            <!-- Back Button -->
-            <div class="mt-4">
+            <div class="p-4">
                 <a href="@Url.Action("Index", "GameNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
-                    Back to Game Nights
+                    Terug naar overzicht
                 </a>
+            </div>
+            }
+            else
+            {
+            <!-- Leave Button -->
+            <div class="p-4">
+                <a href="@Url.Action("Leave", "AttendedNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
+                    Afmelden
+                </a>
+            </div>
+            <div class="p-4">
+                <a href="@Url.Action("Index", "AttendedNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
+                    Terug naar overzicht
+                </a>
+            </div>
+            }
             </div>
         </div>
     </div>
