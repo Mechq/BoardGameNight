@@ -120,6 +120,8 @@ public class GameNightsController : Controller
             .Select(g => g.Id)
             .ToList();
 
+        
+        
         var user = _identityContext.Users.Find(userId);
         if (user == null)
         {
@@ -128,12 +130,28 @@ public class GameNightsController : Controller
 
         var userAge = DateTime.Now.Year - user.DateOfBirth.Year;
         var evening = _gameNightContext.Evenings.Include(e => e.Games).FirstOrDefault(e => e.Id == eveningId);
-
+        
+        
+        
         if (evening == null)
         {
             return NotFound();
         }
 
+        
+        if (evening.Allergy != null && user.Diet != null )
+        {
+            var userAllergies = user.Diet.Split(",");
+            var eveningAllergies = evening.Allergy.Split(",");
+            
+            if (userAllergies.Intersect(eveningAllergies).Any())
+            {
+                ViewBag.EveningId = eveningId;
+                ViewBag.Message = "Je hebt een allergie voor een van de gerechten op deze avond. weet je zeker dat je wilt aanmelden?";
+                return View("Allergy");
+            }
+        }
+        
         bool hasAgeRestrictedGames = evening.Games != null && evening.Games.Select(g => g.GameId).Intersect(ageRestrictedGames).Any();
     
         if (userAge < 18 && hasAgeRestrictedGames)
@@ -147,6 +165,47 @@ public class GameNightsController : Controller
         _gameNightContext.SaveChanges();
         return RedirectToAction("Index");
     }
+    
+    [Authorize]
+    public IActionResult JoinWithAllergy(int eveningId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception("User not found.");
+        var ageRestrictedGames = _gameNightContext.Games
+            .Where(g => g.IsAgeRestricted)
+            .Select(g => g.Id)
+            .ToList();
+        
+        var user = _identityContext.Users.Find(userId);
+        if (user == null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        var userAge = DateTime.Now.Year - user.DateOfBirth.Year;
+        var evening = _gameNightContext.Evenings.Include(e => e.Games).FirstOrDefault(e => e.Id == eveningId);
+        
+        
+        
+        if (evening == null)
+        {
+            return NotFound();
+        }
+        
+        
+        bool hasAgeRestrictedGames = evening.Games != null && evening.Games.Select(g => g.GameId).Intersect(ageRestrictedGames).Any();
+    
+        if (userAge < 18 && hasAgeRestrictedGames)
+        {
+            ViewBag.Message =
+                "Je bent jonger dan 18 jaar en er zijn spellen op deze avond die alleen voor 18+ zijn. Je kunt je niet aanmelden.";
+            return View("AgeRestricted");
+        }
+
+        _gameNightContext.EveningParticipants.Add(new EveningParticipant { EveningId = eveningId, ParticipantId = userId });
+        _gameNightContext.SaveChanges();
+        return RedirectToAction("Index");
+    }
+    
 
     
     

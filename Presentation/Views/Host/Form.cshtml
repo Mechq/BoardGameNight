@@ -8,7 +8,7 @@
 
 
         @{
-        var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
         }
 
         <div class="relative z-0 w-full mb-5 group">
@@ -22,9 +22,44 @@
             <label asp-for="Evening.MaxUsers" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Maxium aantal spelers</label>
         </div>
 
-        <div class="relative z-0 w-full mb-5 group">
-            <input type="text" asp-for="Evening.Allergy" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"/>
-            <label asp-for="Evening.Allergy" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Allergieën (Optioneel)</label>
+        <div>
+            <label asp-for="Evening.Allergy" class="block text-sm font-medium leading-6 text-gray-900">Allergiën/Vegetarisch/Alcohol</label>
+            <div class="relative mt-2">
+                <button id="diet-button" class="w-full py-2 px-3 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Select Diet Options
+                </button>
+
+                <div id="diet-dropdown" class="hidden absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+                    <div class="p-2 max-h-60 overflow-y-auto">
+                        <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" value="Vegetarisch" class="mr-2" onchange="updateHiddenInput()">
+                            <span>Vegetarisch</span>
+                        </label>
+                        <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" value="Veganistisch" class="mr-2" onchange="updateHiddenInput()">
+                            <span>Veganistisch</span>
+                        </label>
+                        <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" value="Lactose-intolerant" class="mr-2" onchange="updateHiddenInput()">
+                            <span>Lactose-intolerant</span>
+                        </label>
+                        <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" value="Gluten-intolerant" class="mr-2" onchange="updateHiddenInput()">
+                            <span>Gluten-intolerant</span>
+                        </label>
+                        <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" value="Notenallergie" class="mr-2" onchange="updateHiddenInput()">
+                            <span>Notenallergie</span>
+                        </label>
+                        <label class="flex items-center hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" value="Alcoholvrij" class="mr-2" onchange="updateHiddenInput()">
+                            <span>Alcoholvrij</span>
+                        </label>
+                    </div>
+                </div>
+
+                <input type="hidden" asp-for="Evening.Allergy" id="diet-hidden" />
+            </div>
         </div>
 
         <div class="grid md:grid-cols-2 md:gap-6">
@@ -42,20 +77,20 @@
             <input type="text" asp-for="Evening.Address.City" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required/>
             <label asp-for="Evening.Address.City" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Stad</label>
             <span asp-validation-for="Evening.Address.City" class="text-danger"></span>
-            </div>
+        </div>
 
         <h2 class="text-lg font-semibold mt-6 mb-4">Selecteer Games</h2>
         <div class="mb-5">
             @foreach (var game in Model.AllGames)
             {
-            <div class="flex items-center mb-4">
-                <input type="checkbox" id="game-@game.Id" name="SelectedGameIds" value="@game.Id"
-                       class="form-checkbox h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                       @if (Model.SelectedGameIds != null && Model.SelectedGameIds.Contains(game.Id)) {
-                       <text>checked</text>;
-                       } />
-                <label for="game-@game.Id" class="ml-2 block text-sm text-gray-900">@game.Name</label>
-            </div>
+                <div class="flex items-center mb-4">
+                    <input type="checkbox" id="game-@game.Id" name="SelectedGameIds" value="@game.Id"
+                           class="form-checkbox h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                           @if (Model.SelectedGameIds != null && Model.SelectedGameIds.Contains(game.Id)) {
+                               <text>checked</text>;
+                           } />
+                    <label for="game-@game.Id" class="ml-2 block text-sm text-gray-900">@game.Name</label>
+                </div>
             }
         </div>
 
@@ -70,3 +105,29 @@
         Cancel
     </a>
 </div>
+
+
+<script>
+    document.getElementById('diet-button').onclick = function () {
+        const dropdown = document.getElementById('diet-dropdown');
+        dropdown.classList.toggle('hidden');
+    };
+
+    function updateHiddenInput() {
+        const checkboxes = document.querySelectorAll('#diet-dropdown input[type="checkbox"]');
+        const selectedOptions = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+
+        document.getElementById('diet-hidden').value = selectedOptions.join(', ');
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.matches('#diet-button') && !event.target.closest('#diet-dropdown')) {
+            const dropdown = document.getElementById('diet-dropdown');
+            if (!dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+            }
+        }
+    };
+</script>
