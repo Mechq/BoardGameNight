@@ -32,23 +32,39 @@
                 <p class="text-gray-900 text-lg">@(Model.GameNight?.Allergy ?? "Geen")</p>
             </div>
 
-            <!-- Participants -->
             <div class="mt-4">
                 <h2 class="text-xl font-semibold text-[#6a9acc]">Deelnemers:</h2>
                 @if (Model.Participants.Any())
                 {
-                    <ul class="list-disc list-inside">
-                        @foreach (var participant in Model.Participants)
+                <ul class="list-disc list-inside">
+                    @foreach (var participant in Model.Participants)
+                    {
+                    <li class="flex items-center text-gray-900">
+                        <span class="mr-2">@(participant?.Name ?? "Onbekend")</span>
+                        @if (Model.Host.Id == User.FindFirstValue(ClaimTypes.NameIdentifier))
                         {
-                            <li class="text-gray-900">@(participant?.Name ?? "Onbekend")</li>
+                        
+                        if (Model.Attendance != null && Model.Attendance.TryGetValue(participant.Id, out double attendanceRate))
+                        {
+                        <p>- @attendanceRate% aanwezig</p>
                         }
-                    </ul>
+                        else
+                        {
+                        <p>- Aanwezigheid onbekend</p>
+                        }
+                        }
+                    </li>
+                    }
+                </ul>
                 }
                 else
                 {
-                    <p class="text-gray-900">Nog geen deelnemers.</p>
+                <p class="text-gray-900">Nog geen deelnemers.</p>
                 }
             </div>
+
+
+
 
             <!-- Games -->
             <div class="mt-4">
