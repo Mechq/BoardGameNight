@@ -31,15 +31,23 @@ public class GameNightsController : Controller
             gameNights = await _gameNightContext.Evenings
                 .Include(e => e.Address)
                 .Include(e => e.Participants)
-                .Where(e => e.Participants.Count < e.MaxUsers) 
+                .Where(e => e.Participants.Count < e.MaxUsers && e.HostDate > DateOnly.FromDateTime(DateTime.Now)) 
                 .ToListAsync();
         }
         else
         {
+            var joinedEveningDates = await _gameNightContext.EveningParticipants
+                .Where(p => p.ParticipantId == userId)
+                .Select(p => p.Evening.HostDate)
+                .ToListAsync();
+            
             gameNights = await _gameNightContext.Evenings
                 .Include(e => e.Address)
                 .Include(e => e.Participants)
-                .Where(e => !e.Participants.Any(p => p.ParticipantId == userId) && e.Participants.Count < e.MaxUsers) 
+                .Where(e => !e.Participants.Any(p => p.ParticipantId == userId) && 
+                            e.Participants.Count < e.MaxUsers && 
+                            e.HostDate > DateOnly.FromDateTime(DateTime.Now) &&
+                            !joinedEveningDates.Contains(e.HostDate))
                 .ToListAsync();
         }
        
