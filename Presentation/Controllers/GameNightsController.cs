@@ -66,6 +66,39 @@ public class GameNightsController : Controller
         return View(gameNightsWithDetails);  
     }
     
+    
+    public async Task<IActionResult> Detailpage(int id)
+    {
+        var gameNight = await _gameNightContext.Evenings
+            .Include(e => e.Address)
+            .Include(e => e.Participants)
+            .Include(e => e.Games)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (gameNight == null)
+        {
+            return NotFound();
+        }
+
+        var host = await _identityContext.Users
+            .FirstOrDefaultAsync(u => u.Id == gameNight.HostId);
+
+        var participantIds = gameNight.Participants.Select(p => p.ParticipantId).Distinct();
+        var participants = await _identityContext.Users
+            .Where(u => participantIds.Contains(u.Id))
+            .ToListAsync();
+
+        var gameNightViewModel = new GameNightViewModel
+        {
+            GameNight = gameNight,
+            Host = host ?? new User { Name = "Unknown" },
+            Participants = participants
+        };
+
+        return View(gameNightViewModel);
+    }
+    
+    
     [Authorize]
     public  IActionResult Join(int eveningId)
     {
@@ -74,33 +107,7 @@ public class GameNightsController : Controller
         _gameNightContext.SaveChanges();
         return RedirectToAction("Index");
     }
-
-    public async Task<IActionResult> Detailpage(int id)
-    {
-        if (id == 0)
-        {
-            return NotFound();
-        }
-
-        
-        /*var evening = await _context.Evenings
-            .Include(e => e.Host) 
-            .Include(e => e.Address) 
-            .Include(e => e.Participants) 
-            .ThenInclude(ep => ep.Participant) 
-            .FirstOrDefaultAsync(e => e.Id == id); 
-
-        if (evening == null)
-        {
-            return NotFound();
-        }
-
-        return View(evening);*/
-        return View();
-    }
-
-
-
+    
     
     //todo implement form
     /*public IActionResult Create()
