@@ -1,60 +1,112 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Domain;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Presentation.Models;
+using Presentation.ViewModels;
 
 namespace Presentation.Controllers;
 
 public class GameNightsController : Controller
 {
-    private readonly ILogger<GameNightsController> _logger;
-    
-    
 
-    public GameNightsController(ILogger<GameNightsController> logger)
+    private readonly GameNightContext _gameNightContext;
+    private readonly IdentityContext _identityContext;
+
+    public GameNightsController(GameNightContext gameNightContext, IdentityContext identityContext)
     {
-        _logger = logger;
+        _gameNightContext = gameNightContext;
+        _identityContext = identityContext;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var user = new User("Stef Rensma", 
-            "stefrensa@gmail.com", 
-            Gender.Man, 
-            new DateOnly(2005, 08, 27),
-            "",
-            new Address(1, "Patrijs", "Barendrecht"));
-        var gameNight = new Evening(1, user, 8, new DateOnly(2024, 11, 7), "",
-            new Address(2, "Sandelhout", "Barendrecht"));
-        var gameNight2 = new Evening(2, user, 8, new DateOnly(2024, 11, 7), "",
-            new Address(2, "Sandelhout", "Barendrecht"));
-        List<Evening> gameNightList = new List<Evening>() { gameNight, gameNight2 };
-        return View(gameNightList);
-    }
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        IEnumerable<Evening> gameNights;
+        if (userId == null)
+        {
+            gameNights = await _gameNightContext.Evenings
+                .Include(e => e.Address)
+                .Include(e => e.Participants)
+                .Where(e => e.Participants.Count < e.MaxUsers) 
+                .ToListAsync();
+        }
+        else
+        {
+            gameNights = await _gameNightContext.Evenings
+                .Include(e => e.Address)
+                .Include(e => e.Participants)
+                .Where(e => !e.Participants.Any(p => p.ParticipantId == userId) && e.Participants.Count < e.MaxUsers) 
+                .ToListAsync();
+        }
+       
 
-    public IActionResult Detailpage(int id)
+        var hostIds = gameNights.Select(e => e.HostId).Distinct();
+        var hosts = await _identityContext.Users
+            .Where(u => hostIds.Contains(u.Id))
+            .ToListAsync();
+
+        var participantIds = gameNights.SelectMany(e => e.Participants.Select(p => p.ParticipantId)).Distinct();
+        var participants = await _identityContext.Users
+            .Where(u => participantIds.Contains(u.Id))
+            .ToListAsync();
+
+        var gameNightsWithDetails = gameNights.Select(gameNight => new GameNightViewModel
+        {
+            GameNight = gameNight,
+            Host = hosts.FirstOrDefault(u => u.Id == gameNight.HostId) ?? new User { Name = "Unknown" }, 
+            Participants = gameNight.Participants
+                .Select(p => participants.FirstOrDefault(u => u.Id == p.ParticipantId) ?? new User { Name = "Unknown" }) 
+                .ToList()
+        }).ToList();
+
+        return View(gameNightsWithDetails);  
+    }
+    
+    
+    public async Task<IActionResult> Detailpage(int id)
     {
-        if (id == 0)
+        var gameNight = await _gameNightContext.Evenings
+            .Include(e => e.Address)
+            .Include(e => e.Participants)
+            .Include(e => e.Games)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (gameNight == null)
         {
             return NotFound();
         }
-        //temp code
-        var user = new User("Stef Rensma", 
-            "stefrensa@gmail.com", 
-            Gender.Man, 
-            new DateOnly(2005, 08, 27),
-            "",
-            new Address(1, "Patrijs", "Barendrecht"));
-        var gameNight = new Evening(1, user, 8, new DateOnly(2024, 11, 7), "",
-            new Address(2, "Sandelhout", "Barendrecht"));
-        var gameNight2 = new Evening(2, user, 8, new DateOnly(2024, 11, 7), "",
-            new Address(2, "Sandelhout", "Barendrecht"));
-        
-        List<Evening> gameNightList = new List<Evening>() { gameNight, gameNight2 };
-        Evening detailGameNight = gameNightList.Find(e => e.Id == id);
-        return View(detailGameNight);
-    }
 
+        var host = await _identityContext.Users
+            .FirstOrDefaultAsync(u => u.Id == gameNight.HostId);
+
+        var participantIds = gameNight.Participants.Select(p => p.ParticipantId).Distinct();
+        var participants = await _identityContext.Users
+            .Where(u => participantIds.Contains(u.Id))
+            .ToListAsync();
+
+        var gameNightViewModel = new GameNightViewModel
+        {
+            GameNight = gameNight,
+            Host = host ?? new User { Name = "Unknown" },
+            Participants = participants
+        };
+
+        return View(gameNightViewModel);
+    }
+    
+    
+    [Authorize]
+    public  IActionResult Join(int eveningId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
+        _gameNightContext.EveningParticipants.Add(new EveningParticipant { EveningId = eveningId, ParticipantId = userId });
+        _gameNightContext.SaveChanges();
+        return RedirectToAction("Index");
+    }
     
     
     //todo implement form

@@ -1,32 +1,103 @@
-@{
-ViewData["Title"] = "Game Night";
-}
-@model Domain.Evening
+@using System.Security.Claims
+@model Presentation.ViewModels.GameNightViewModel
 
-<div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg mt-10 p-6">
-    <h1 class="text-4xl font-bold text-center mb-6">Game Night Details</h1>
-    <div class="mb-4">
-        <h2 class="text-2xl font-semibold text-gray-800">Host Name</h2>
-        <p class="text-gray-600">@Model.Host.Name</p>
-    </div>
-    <div class="mb-4">
-        <h2 class="text-2xl font-semibold text-gray-800">Date</h2>
-        <p class="text-gray-600">@Model.HostDate.ToString("MMMM dd, yyyy")</p>
-    </div>
-    <div class="mb-4">
-        <h2 class="text-2xl font-semibold text-gray-800">Location</h2>
-        <p class="text-gray-600">@Model.Address.City, @Model.Address.Street, @Model.Address.HouseNumber</p> 
-    </div>
-    @*<div class="mb-4">
-        <h2 class="text-2xl font-semibold text-gray-800">Participants</h2>
-        <ul class="list-disc pl-6 text-gray-600">
-            @foreach (var participant in Model.Participants)
+
+
+    <div class="flex items-center justify-center min-h-screen relative z-10">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-3xl w-full">
+            <h1 class="text-3xl font-bold text-center text-[#6a9acc] mb-4">Game Night Details</h1>
+
+            <!-- Host Info -->
+            <div class="mt-4">
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Host:</h2>
+                <p class="text-gray-900 text-lg">@(Model.Host?.Name ?? "Unknown")</p>
+            </div>
+
+            <!-- Date and Time -->
+            <div class="mt-4">
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Date and Time:</h2>
+                <p class="text-gray-900 text-lg">@Model.GameNight?.HostDate.ToString("d")</p>
+            </div>
+
+            <!-- Address -->
+            <div class="mt-4">
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Location:</h2>
+                <p class="text-gray-900 text-lg">@Model.GameNight?.Address?.Street @Model.GameNight?.Address?.HouseNumber, @Model.GameNight?.Address?.City</p>
+            </div>
+
+            <!-- Allergy Info -->
+            <div class="mt-4">
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Allergy Information:</h2>
+                <p class="text-gray-900 text-lg">@(Model.GameNight?.Allergy ?? "None")</p>
+            </div>
+
+            <!-- Participants -->
+            <div class="mt-4">
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Participants:</h2>
+                @if (Model.Participants.Any())
+                {
+                    <ul class="list-disc list-inside">
+                        @foreach (var participant in Model.Participants)
+                        {
+                            <li class="text-gray-900">@(participant?.Name ?? "Unknown")</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-gray-900">No participants yet.</p>
+                }
+            </div>
+
+            <!-- Games -->
+            <div class="mt-4">
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Games:</h2>
+                @if (Model.GameNight.Games.Any())
+                {
+                    <ul class="list-disc list-inside">
+                        @foreach (var game in Model.GameNight.Games)
+                        {
+                            <li class="text-gray-900">@(game.Game?.Name ?? "Unknown")</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-gray-900">No games assigned yet.</p>
+                }
+            </div>
+
+
+            <div class="flex items-center justify-content-around gap-4 mt-6">
+
+            @if (!Model.Participants.Any(p => p.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)))
             {
-            <li>@participant.Name</li>
+            <!-- Join Button -->
+            <div class="p-4">
+                <a href="@Url.Action("Join", "GameNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
+                    Aanmelden
+                </a>
+            </div>
+            <div class="p-4">
+                <a href="@Url.Action("Index", "GameNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
+                    Terug naar overzicht
+                </a>
+            </div>
             }
-        </ul>
-    </div>*@
-    <div class="text-center mt-6">
-        <a href="@Url.Action("Index", "GameNights")" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Game Nights</a>
+            else
+            {
+            <!-- Leave Button -->
+            <div class="p-4">
+                <a href="@Url.Action("Leave", "AttendedNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
+                    Afmelden
+                </a>
+            </div>
+            <div class="p-4">
+                <a href="@Url.Action("Index", "AttendedNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
+                    Terug naar overzicht
+                </a>
+            </div>
+            }
+            </div>
+        </div>
     </div>
-</div>
