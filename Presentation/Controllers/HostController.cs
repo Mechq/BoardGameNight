@@ -59,7 +59,6 @@ public class HostController : Controller
 
     public IActionResult CantEdit()
     {
-        //todo add view
         ViewBag.Message =
             "Minimaal één deelnemer heeft zich al aangemeld voor deze avond. Je kunt de avond niet meer aanpassen.";
         return View();
@@ -79,8 +78,8 @@ public class HostController : Controller
 
     public async Task<IActionResult> Form(int? id)
     {
-        Evening? evening = null;
-        List<Game> games = null;
+        Evening? evening;
+        List<Game> games;
         List<int> selectedGameIds = new List<int>();
 
         if (!id.HasValue)
@@ -158,7 +157,7 @@ public class HostController : Controller
                 };
                 newEvening.Address = newAddress; 
             }
-        }
+        } 
         else
         {
             newEvening = new Evening
@@ -177,10 +176,7 @@ public class HostController : Controller
             await _gameNightContext.Evenings.AddAsync(newEvening);
         }
         await _gameNightContext.SaveChangesAsync();
-        if (eveningFormViewModel.SelectedGameIds != null)
-        {
-            
-            if (eveningFormViewModel.Evening.Id > 0)
+        if (eveningFormViewModel.Evening.Id > 0)
             {
                 var existingGames = await _gameNightContext.EveningGame
                     .Where(eg => eg.EveningId == newEvening.Id)
@@ -199,14 +195,12 @@ public class HostController : Controller
                 };
                 _gameNightContext.EveningGame.Add(eveningGame);
             }
-        }
-        
-        await _gameNightContext.SaveChangesAsync();
+            await _gameNightContext.SaveChangesAsync();
         return RedirectToAction("Index");
     }
     catch (Exception ex)
     {
-        ModelState.AddModelError(string.Empty, "An error occurred while saving data. Please try again.");
+        ModelState.AddModelError(string.Empty, "An error occurred while saving data. Please try again." + ex.Message);
         return View(eveningFormViewModel);
     }
 }

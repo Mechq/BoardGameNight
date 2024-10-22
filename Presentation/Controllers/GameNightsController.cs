@@ -113,15 +113,43 @@ public class GameNightsController : Controller
         return View(gameNightViewModel);
     }
     
-    
     [Authorize]
-    public  IActionResult Join(int eveningId)
+    public IActionResult Join(int eveningId)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception("User not found.");
+        var ageRestrictedGames = _gameNightContext.Games
+            .Where(g => g.IsAgeRestricted)
+            .Select(g => g.Id)
+            .ToList();
+
+        var user = _identityContext.Users.Find(userId);
+        if (user == null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        var userAge = DateTime.Now.Year - user.DateOfBirth.Year;
+        var evening = _gameNightContext.Evenings.Include(e => e.Games).FirstOrDefault(e => e.Id == eveningId);
+
+        if (evening == null)
+        {
+            return NotFound();
+        }
+
+        bool hasAgeRestrictedGames = evening.Games != null && evening.Games.Select(g => g.GameId).Intersect(ageRestrictedGames).Any();
+    
+        if (userAge < 18 && hasAgeRestrictedGames)
+        {
+            ViewBag.Message =
+                "Je bent jonger dan 18 jaar en er zijn spellen op deze avond die alleen voor 18+ zijn. Je kunt je niet aanmelden.";
+            return View("AgeRestricted");
+        }
+
         _gameNightContext.EveningParticipants.Add(new EveningParticipant { EveningId = eveningId, ParticipantId = userId });
         _gameNightContext.SaveChanges();
         return RedirectToAction("Index");
     }
+
     
     
    

@@ -57,7 +57,7 @@
                     <ul class="list-disc list-inside">
                         @foreach (var game in Model.Games)
                         {
-                            <li class="text-gray-900">@(game.Name)</li>
+                            <li class="text-gray-900">@(game.Name) @if (game.IsAgeRestricted){<p>18+</p>}</li>
                         }
                     </ul>
                 }
@@ -79,7 +79,7 @@
                     @if (!isParticipant && !isHost)
                     {
                     <!-- Join Button -->
-                    <a href="@Url.Action("Join", "GameNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
+                    <a href="@Url.Action("Join", "GameNights", new { eveningId = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
                         Aanmelden
                     </a>
                     <div class="p-4">
@@ -97,7 +97,7 @@
                     else if (isParticipant)
                     {
                     <!-- Leave Button -->
-                    <a href="@Url.Action("Leave", "AttendedNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
+                    <a href="@Url.Action("Leave", "AttendedNights", new { eveningId = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
                         Afmelden
                     </a>
                     <div class="p-4">
