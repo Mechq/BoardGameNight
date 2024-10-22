@@ -31,6 +31,7 @@ public class GameNightsController : Controller
             gameNights = await _gameNightContext.Evenings
                 .Include(e => e.Address)
                 .Include(e => e.Participants)
+                .Where(e => e.Participants.Count < e.MaxUsers) 
                 .ToListAsync();
         }
         else
@@ -38,7 +39,7 @@ public class GameNightsController : Controller
             gameNights = await _gameNightContext.Evenings
                 .Include(e => e.Address)
                 .Include(e => e.Participants)
-                .Where(e =>  !e.Participants.Any(p => p.ParticipantId == userId))
+                .Where(e => !e.Participants.Any(p => p.ParticipantId == userId) && e.Participants.Count < e.MaxUsers) 
                 .ToListAsync();
         }
        
@@ -53,7 +54,6 @@ public class GameNightsController : Controller
             .Where(u => participantIds.Contains(u.Id))
             .ToListAsync();
 
-        
         var gameNightsWithDetails = gameNights.Select(gameNight => new GameNightViewModel
         {
             GameNight = gameNight,
