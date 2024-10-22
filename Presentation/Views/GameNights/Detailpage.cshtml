@@ -5,47 +5,47 @@
 
     <div class="flex items-center justify-center min-h-screen relative z-10">
         <div class="bg-white rounded-lg shadow-lg p-8 max-w-3xl w-full">
-            <h1 class="text-3xl font-bold text-center text-[#6a9acc] mb-4">Game Night Details</h1>
+            <h1 class="text-3xl font-bold text-center text-[#6a9acc] mb-4">Bordspellen avond details</h1>
 
             <!-- Host Info -->
             <div class="mt-4">
-                <h2 class="text-xl font-semibold text-[#6a9acc]">Host:</h2>
-                <p class="text-gray-900 text-lg">@(Model.Host?.Name ?? "Unknown")</p>
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Organisator:</h2>
+                <p class="text-gray-900 text-lg">@(Model.Host?.Name ?? "Onbekend")</p>
             </div>
 
             <!-- Date and Time -->
             <div class="mt-4">
-                <h2 class="text-xl font-semibold text-[#6a9acc]">Date and Time:</h2>
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Datum:</h2>
                 <p class="text-gray-900 text-lg">@Model.GameNight?.HostDate.ToString("d")</p>
             </div>
 
             <!-- Address -->
             <div class="mt-4">
-                <h2 class="text-xl font-semibold text-[#6a9acc]">Location:</h2>
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Locatie:</h2>
                 <p class="text-gray-900 text-lg">@Model.GameNight?.Address?.Street @Model.GameNight?.Address?.HouseNumber, @Model.GameNight?.Address?.City</p>
             </div>
 
             <!-- Allergy Info -->
             <div class="mt-4">
-                <h2 class="text-xl font-semibold text-[#6a9acc]">Allergy Information:</h2>
-                <p class="text-gray-900 text-lg">@(Model.GameNight?.Allergy ?? "None")</p>
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Allergie informatie:</h2>
+                <p class="text-gray-900 text-lg">@(Model.GameNight?.Allergy ?? "Geen")</p>
             </div>
 
             <!-- Participants -->
             <div class="mt-4">
-                <h2 class="text-xl font-semibold text-[#6a9acc]">Participants:</h2>
+                <h2 class="text-xl font-semibold text-[#6a9acc]">Deelnemers:</h2>
                 @if (Model.Participants.Any())
                 {
                     <ul class="list-disc list-inside">
                         @foreach (var participant in Model.Participants)
                         {
-                            <li class="text-gray-900">@(participant?.Name ?? "Unknown")</li>
+                            <li class="text-gray-900">@(participant?.Name ?? "Onbekend")</li>
                         }
                     </ul>
                 }
                 else
                 {
-                    <p class="text-gray-900">No participants yet.</p>
+                    <p class="text-gray-900">Nog geen deelnemers.</p>
                 }
             </div>
 
@@ -54,62 +54,73 @@
                 <h2 class="text-xl font-semibold text-[#6a9acc]">Games:</h2>
                 @if (Model.Games.Any())
                 {
-                    <ul class="list-disc list-inside">
-                        @foreach (var game in Model.Games)
-                        {
-                            <li class="text-gray-900">@(game.Name) @if (game.IsAgeRestricted){<p>18+</p>}</li>
-                        }
-                    </ul>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach (var game in Model.Games)
+                    {
+                    <div class="flex flex-col bg-white rounded-lg shadow-md overflow-hidden">
+                        <img src="@game.ImageURL" alt="@game.Name" class="h-48 w-full object-cover" />
+                        <div class="p-4 flex-1">
+                            <h3 class="text-lg font-semibold text-gray-900">@game.Name</h3>
+                            <p class="text-sm text-gray-600">@game.Description</p>
+                            <p class="mt-2 text-sm font-medium text-gray-800">Genre: @game.Genre</p>
+                            <p class="mt-1 text-sm font-medium text-gray-800">Type: @game.TypeOfGame</p>
+                            @if (game.IsAgeRestricted)
+                            {
+                            <p class="mt-2 text-red-500 font-semibold">18+</p>
+                            }
+                        </div>
+                    </div>
+                    }
+                </div>
                 }
                 else
                 {
-                    <p class="text-gray-900">No games assigned yet.</p>
+                <p class="text-gray-900">No games assigned yet.</p>
                 }
             </div>
 
 
-            <div class="flex items-center justify-content-around gap-4 mt-6">
+            <div class="">
                 @{
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var isHost = Model.GameNight.HostId == userId;
                 var isParticipant = Model.Participants.Any(p => p.Id == userId);
                 }
 
-                <div class="p-4">
+                <div class="p-4 flex items-center justify-center gap-4 mt-6">
                     @if (!isParticipant && !isHost)
                     {
                     <!-- Join Button -->
-                    <a href="@Url.Action("Join", "GameNights", new { eveningId = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
+                    <a href="@Url.Action("Join", "GameNights", new { eveningId = Model.GameNight.Id })" class="flex-1 rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300 text-center">
                         Aanmelden
                     </a>
-                    <div class="p-4">
-                        <a href="@Url.Action("Index", "GameNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
-                            Terug naar overzicht
-                        </a>
-                    </div>
+
+                    <!-- Back to Overview Button -->
+                    <a href="@Url.Action("Index", "GameNights")" class="flex-1 rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300 text-center">
+                        Terug naar overzicht
+                    </a>
                     }
                     else if (isHost)
                     {
-                    <a href="@Url.Action("Index", "AttendedNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
+                    <a href="@Url.Action("Index", "AttendedNights")" class="flex-1 rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300 text-center">
                         Terug naar overzicht
                     </a>
                     }
                     else if (isParticipant)
                     {
                     <!-- Leave Button -->
-                    <a href="@Url.Action("Leave", "AttendedNights", new { eveningId = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
+                    <a href="@Url.Action("Leave", "AttendedNights", new { eveningId = Model.GameNight.Id })" class="flex-1 rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300 text-center">
                         Afmelden
                     </a>
-                    <div class="p-4">
-                        <a href="@Url.Action("Index", "GameNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
-                            Terug naar overzicht
-                        </a>
-                    </div>
+
+                    <!-- Back to Overview Button -->
+                    <a href="@Url.Action("Index", "GameNights")" class="flex-1 rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300 text-center">
+                        Terug naar overzicht
+                    </a>
                     }
                 </div>
 
-                <!-- Back to Overview Button -->
-                
-        </div>
+
+            </div>
         </div>
     </div>
