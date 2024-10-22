@@ -33,21 +33,21 @@
                 <i class="fas fa-carrot text-[#6a9acc] mr-2"></i>
                 <div>
                     <label class="block text-gray-700">Diet:</label>
-                    <p class="text-gray-900 font-medium">@Model.Diet ?? "N/A"</p>
+                    <p class="text-gray-900 font-medium">@(Model.Diet ?? "N/A")</p>
                 </div>
             </div>
             <div class="mt-4 flex items-center">
                 <i class="fas fa-map-marker-alt text-[#6a9acc] mr-2"></i>
                 <div>
                     <label class="block text-gray-700">Address:</label>
-                    <p class="text-gray-900 font-medium">@Model.Address?.Street ?? "N/A", @Model.Address?.City ?? "N/A"</p>
+                    <p class="text-gray-900 font-medium">@(Model.Address?.Street ?? "N/A"), @(Model.Address?.City ?? "N/A")</p>
                 </div>
             </div>
-            <div class="mt-6">
+            @*<div class="mt-6">
                 <a href="@Url.Action("Edit", "Profile")" class="w-full flex justify-center bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 rounded-md transition duration-300">
                     Edit Profile
                 </a>
-            </div>
+            </div>*@
         </div>
     </div>
 </div>

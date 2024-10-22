@@ -121,15 +121,7 @@ namespace Presentation.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            if (!ModelState.IsValid)
-            {
-                
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                foreach (var error in errors)
-                {
-                    Console.WriteLine(error);
-                }
-            }
+           
             return View(model); 
         }
 

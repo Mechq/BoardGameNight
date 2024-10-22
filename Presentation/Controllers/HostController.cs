@@ -117,7 +117,6 @@ public class HostController : Controller
     [HttpPost]
     public async Task<IActionResult> Form(EveningFormViewModel eveningFormViewModel)
     {
-        Console.WriteLine("eveningFormViewModel.Evening.Id: " + eveningFormViewModel.Evening.Id, "eveningFormViewModel.SelectedGameIds: " + eveningFormViewModel.SelectedGameIds, "eveningFormViewModel.Evening.AddressId: " + eveningFormViewModel.Evening.AddressId);
         
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
      
@@ -127,7 +126,6 @@ public class HostController : Controller
         
         if (eveningFormViewModel.Evening?.Id > 0)
         {
-            Console.WriteLine("------------------------------Updating existing evening");
             newEvening = await _gameNightContext.Evenings.FindAsync(eveningFormViewModel.Evening.Id);
             
             if (newEvening == null)
@@ -139,11 +137,7 @@ public class HostController : Controller
             newEvening.HostDate = eveningFormViewModel.Evening.HostDate;
             newEvening.MaxUsers = eveningFormViewModel.Evening.MaxUsers;
             newEvening.Allergy = eveningFormViewModel.Evening.Allergy;
-            /*
-            await _gameNightContext.SaveChangesAsync();
-            */
-
-            if (eveningFormViewModel.Evening.AddressId > 0)
+        if (eveningFormViewModel.Evening.AddressId > 0)
             {
                 var existingAddress = await _gameNightContext.Addresses.FindAsync(eveningFormViewModel.Evening.AddressId);
                 if (existingAddress != null)
@@ -167,7 +161,6 @@ public class HostController : Controller
         }
         else
         {
-            Console.WriteLine("------------------------------Creating new evening");
             newEvening = new Evening
             {
                 HostId = userId ?? throw new InvalidOperationException("User must be logged in."),

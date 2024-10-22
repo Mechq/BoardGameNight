@@ -52,12 +52,12 @@
             <!-- Games -->
             <div class="mt-4">
                 <h2 class="text-xl font-semibold text-[#6a9acc]">Games:</h2>
-                @if (Model.GameNight.Games.Any())
+                @if (Model.Games.Any())
                 {
                     <ul class="list-disc list-inside">
-                        @foreach (var game in Model.GameNight.Games)
+                        @foreach (var game in Model.Games)
                         {
-                            <li class="text-gray-900">@(game.Game?.Name ?? "Unknown")</li>
+                            <li class="text-gray-900">@(game.Name)</li>
                         }
                     </ul>
                 }

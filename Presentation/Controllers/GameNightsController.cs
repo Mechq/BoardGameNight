@@ -49,7 +49,9 @@ public class GameNightsController : Controller
                             e.Participants.Count < e.MaxUsers && 
                             e.HostDate > DateOnly.FromDateTime(DateTime.Now) &&
                             !joinedEveningDates.Contains(e.HostDate))
+                /*
                 .OrderBy(e => e.HostDate)
+                */
                 .ToListAsync();
         }
        
@@ -93,6 +95,8 @@ public class GameNightsController : Controller
         var host = await _identityContext.Users
             .FirstOrDefaultAsync(u => u.Id == gameNight.HostId);
 
+        var games = await _gameNightContext.Games.Where(g => gameNight.Games.Select(gn => gn.GameId).Contains(g.Id)).ToListAsync();
+        
         var participantIds = gameNight.Participants.Select(p => p.ParticipantId).Distinct();
         var participants = await _identityContext.Users
             .Where(u => participantIds.Contains(u.Id))
@@ -102,7 +106,8 @@ public class GameNightsController : Controller
         {
             GameNight = gameNight,
             Host = host ?? new User { Name = "Unknown" },
-            Participants = participants
+            Participants = participants,
+            Games = games
         };
 
         return View(gameNightViewModel);
@@ -119,36 +124,7 @@ public class GameNightsController : Controller
     }
     
     
-    //todo implement form
-    /*public IActionResult Create()
-    {
-        // Populate necessary dropdowns (e.g., Hosts, Games, Participants)
-        ViewBag.Hosts = new SelectList(_userRepository.GetAll(), "Id", "Name");
-        ViewBag.BoardGames = new SelectList(_gameRepository.GetAll(), "Id", "Title");
-        ViewBag.Participants = new SelectList(_userRepository.GetAll(), "Id", "Name");
-
-        return View();
-    }
-
-    [HttpPost]
-    public IActionResult Create(Evening newEvening)
-    {
-        if (ModelState.IsValid)
-        {
-            _eveningRepository.Add(newEvening);
-            return RedirectToAction("Index");
-        }
-
-        // Repopulate dropdowns if the form submission fails
-        ViewBag.Hosts = new SelectList(_userRepository.GetAll(), "Id", "Name");
-        ViewBag.BoardGames = new SelectList(_gameRepository.GetAll(), "Id", "Title");
-        ViewBag.Participants = new SelectList(_userRepository.GetAll(), "Id", "Name");
-
-        return View(newEvening);
-    }*/
-
    
-
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
