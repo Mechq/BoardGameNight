@@ -57,11 +57,69 @@ public class HostController : Controller
         return View(gameNightsWithDetails);
     }
 
-    public IActionResult CantEdit()
+    public IActionResult Attendance(int eveningId)
     {
-        ViewBag.Message =
-            "Minimaal één deelnemer heeft zich al aangemeld voor deze avond. Je kunt de avond niet meer aanpassen.";
-        return View();
+        var participantIds = _gameNightContext.EveningParticipants
+            .Where(ep => ep.EveningId == eveningId)
+            .Select(ep => ep.ParticipantId)
+            .ToList();
+        
+        
+        var participants = _identityContext.Users
+            .Where(u => participantIds.Contains(u.Id))
+            .ToList();
+
+        TempData["EveningId"] = eveningId;
+        return View(participants);
+    }
+
+
+    [HttpPost]
+    public IActionResult Attendance(string[] participants)
+    {
+        var eveningId = (int)TempData["EveningId"];
+        Console.WriteLine("EveningId: " + eveningId);
+
+        
+        if (eveningId == 0)
+        {
+            ModelState.AddModelError(string.Empty, "Geen avond geselecteerd.");
+            return View(new List<User>());
+        }
+
+        Console.WriteLine("Participants: " + participants.Length);
+
+        
+        /*
+        if (!participants.Any())
+        {
+            ModelState.AddModelError(string.Empty, "Geen deelnemers geselecteerd.");
+            return View(new List<User>());
+        }*/
+
+        
+        var existingParticipants = _gameNightContext.EveningParticipants
+            .Where(ep => ep.EveningId == eveningId)
+            .ToList();
+
+        
+        foreach (var participantId in existingParticipants)
+        {
+            
+            if (participants.Contains(participantId.ParticipantId))
+            {
+                participantId.ShowUp = true; 
+            }
+            else
+            {
+                participantId.ShowUp = false; 
+            }
+        }
+
+        
+        _gameNightContext.SaveChanges();
+
+        return RedirectToAction("Index"); 
     }
 
 

@@ -6,5 +6,6 @@ namespace Domain
         public Evening Evening { get; set; }
 
         public string ParticipantId { get; set; }
+        public bool? ShowUp { get; set; }
     }
 }
