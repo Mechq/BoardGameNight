@@ -77,64 +77,69 @@ public class GameNightsController : Controller
     }
     
     
-    public async Task<IActionResult> Detailpage(int id)
+   public async Task<IActionResult> Detailpage(int id)
+{
+    var gameNight = await _gameNightContext.Evenings
+        .Include(e => e.Address)
+        .Include(e => e.Participants)
+        .Include(e => e.Games)
+        .FirstOrDefaultAsync(e => e.Id == id);
+
+    if (gameNight == null)
     {
-        var gameNight = await _gameNightContext.Evenings
-            .Include(e => e.Address)
-            .Include(e => e.Participants)
-            .Include(e => e.Games)
-            .FirstOrDefaultAsync(e => e.Id == id);
+        return NotFound();
+    }
 
-        if (gameNight == null)
-        {
-            return NotFound();
-        }
+    var host = await _identityContext.Users
+        .FirstOrDefaultAsync(u => u.Id == gameNight.HostId);
 
-        var host = await _identityContext.Users
-            .FirstOrDefaultAsync(u => u.Id == gameNight.HostId);
+    var games = await _gameNightContext.Games
+        .Where(g => gameNight.Games.Select(gn => gn.GameId).Contains(g.Id))
+        .ToListAsync();
 
-        var games = await _gameNightContext.Games
-            .Where(g => gameNight.Games.Select(gn => gn.GameId).Contains(g.Id))
-            .ToListAsync();
+    var participantIds = gameNight.Participants.Select(p => p.ParticipantId).Distinct();
+    var participants = await _identityContext.Users
+        .Where(u => participantIds.Contains(u.Id))
+        .ToListAsync();
 
-        var participantIds = gameNight.Participants.Select(p => p.ParticipantId).Distinct();
-        var participants = await _identityContext.Users
-            .Where(u => participantIds.Contains(u.Id))
-            .ToListAsync();
-
-        // Fetch attendance rates
-        var attendanceRates = new Dictionary<string, double>();
-        var totalCount = await _gameNightContext.EveningParticipants.CountAsync(ep => ep.EveningId == id);
     
+    var attendanceRates = new Dictionary<string, double>();
+
+    
+    foreach (var participant in participants)
+    {
+        
+        var participantAttendance = await _gameNightContext.EveningParticipants
+            .Where(ep => ep.ParticipantId == participant.Id && ep.EveningId == id)
+            .ToListAsync();
+
+        
+        int attendedCount = participantAttendance.Count(ep => ep.ShowUp == true);
+        int totalCount = participantAttendance.Count();
+
+        
         if (totalCount > 0)
         {
-            var attendanceData = await _gameNightContext.EveningParticipants
-                .Where(ep => ep.EveningId == id)
-                .GroupBy(ep => ep.ParticipantId)
-                .Select(g => new
-                {
-                    ParticipantId = g.Key,
-                    AttendedCount = g.Count(ep => ep.ShowUp == true), 
-                }).ToListAsync();
-
-            foreach (var data in attendanceData)
-            {
-                double rate = (double)data.AttendedCount / totalCount * 100;
-                attendanceRates[data.ParticipantId] = rate;
-            }
+            double attendanceRate = (double)attendedCount / totalCount * 100;
+            attendanceRates[participant.Id] = attendanceRate;
         }
-
-        var gameNightViewModel = new GameNightViewModel
+        else
         {
-            GameNight = gameNight,
-            Host = host ?? new User { Name = "Unknown" },
-            Participants = participants,
-            Games = games,
-            Attendance = attendanceRates 
-        };
-
-        return View(gameNightViewModel);
+            attendanceRates[participant.Id] = 0; 
+        }
     }
+
+    var gameNightViewModel = new GameNightViewModel
+    {
+        GameNight = gameNight,
+        Host = host ?? new User { Name = "Unknown" },
+        Participants = participants,
+        Games = games,
+        Attendance = attendanceRates 
+    };
+
+    return View(gameNightViewModel);
+}
 
 
     
