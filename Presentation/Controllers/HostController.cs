@@ -64,6 +64,17 @@ public class HostController : Controller
     }
 
 
+    public IActionResult Delete(int id)
+    {
+        Console.WriteLine("Delete evening with id: " + id);
+        var evening = _gameNightContext.Evenings.FirstOrDefault(e => e.Id == id);
+        Console.WriteLine("Evening found: " + evening); 
+        _gameNightContext.Evenings.Remove(evening?? throw new InvalidOperationException("evening must exist."));
+        _gameNightContext.SaveChanges();
+        return RedirectToAction("Index");
+    }
+
+
     public async Task<IActionResult> Form(int? id)
     {
         Evening? evening = null;

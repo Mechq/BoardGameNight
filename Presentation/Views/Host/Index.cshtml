@@ -28,18 +28,26 @@
             </a>
             @if (eveningViewModel.Participants?.Count == 0)
             {
-                <div class="px-6 py-4 bg-gray-50 flex justify-between">
-                    <a href="@Url.Action("Form", "Host", new { id = evening?.Id })"
-                       class="bg-[#6a9acc] hover:bg-[#4f7499] text-white font-bold py-2 px-4 rounded-full transition duration-300">
-                        Aanpassen
-                    </a>
-                </div>
+            <div class="px-6 py-4 bg-gray-50 flex justify-between items-center">
+                <a href="@Url.Action("Form", "Host", new { id = evening?.Id })"
+                   class="bg-[#6a9acc] hover:bg-[#4f7499] text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                    Aanpassen
+                </a>
+
+                <!-- Trash Can Icon with Red Background -->
+                <a href="@Url.Action("Delete", "Host", new { id = evening?.Id })" class="ml-4">
+                    <div class="bg-red-500 hover:bg-[#C70000] p-2 rounded-md">
+                        <img src="@Url.Content("~/images/trash-can.png")" alt="Delete" class="w-6 h-6">
+                    </div>
+                </a>
+            </div>
+
             }
             @if (eveningViewModel.Participants?.Count > 0)
             {
                 <div class="px-6 py-4 bg-gray-50 flex justify-between">
                     <a href="@Url.Action("CantEdit", "Host")"
-                       class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                       class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">
                         Aanpassen
                     </a>
                 </div>
