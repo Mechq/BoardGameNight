@@ -32,6 +32,7 @@ public class GameNightsController : Controller
                 .Include(e => e.Address)
                 .Include(e => e.Participants)
                 .Where(e => e.Participants.Count < e.MaxUsers && e.HostDate > DateOnly.FromDateTime(DateTime.Now)) 
+                .OrderBy(e => e.HostDate)
                 .ToListAsync();
         }
         else
@@ -48,6 +49,7 @@ public class GameNightsController : Controller
                             e.Participants.Count < e.MaxUsers && 
                             e.HostDate > DateOnly.FromDateTime(DateTime.Now) &&
                             !joinedEveningDates.Contains(e.HostDate))
+                .OrderBy(e => e.HostDate)
                 .ToListAsync();
         }
        

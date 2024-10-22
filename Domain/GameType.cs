@@ -4,5 +4,7 @@ public enum GameType
 {
     Cards,
     BoardGame,
-    Outdoor
+    Outdoor,
+    VideoGame,
+    Other
 }

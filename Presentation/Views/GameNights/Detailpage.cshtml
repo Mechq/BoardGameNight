@@ -69,35 +69,47 @@
 
 
             <div class="flex items-center justify-content-around gap-4 mt-6">
+                @{
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var isHost = Model.GameNight.HostId == userId;
+                var isParticipant = Model.Participants.Any(p => p.Id == userId);
+                }
 
-            @if (!Model.Participants.Any(p => p.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)))
-            {
-            <!-- Join Button -->
-            <div class="p-4">
-                <a href="@Url.Action("Join", "GameNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
-                    Aanmelden
-                </a>
-            </div>
-            <div class="p-4">
-                <a href="@Url.Action("Index", "GameNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
-                    Terug naar overzicht
-                </a>
-            </div>
-            }
-            else
-            {
-            <!-- Leave Button -->
-            <div class="p-4">
-                <a href="@Url.Action("Leave", "AttendedNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
-                    Afmelden
-                </a>
-            </div>
-            <div class="p-4">
-                <a href="@Url.Action("Index", "AttendedNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
-                    Terug naar overzicht
-                </a>
-            </div>
-            }
-            </div>
+                <div class="p-4">
+                    @if (!isParticipant && !isHost)
+                    {
+                    <!-- Join Button -->
+                    <a href="@Url.Action("Join", "GameNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
+                        Aanmelden
+                    </a>
+                    <div class="p-4">
+                        <a href="@Url.Action("Index", "GameNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
+                            Terug naar overzicht
+                        </a>
+                    </div>
+                    }
+                    else if (isHost)
+                    {
+                    <a href="@Url.Action("Index", "AttendedNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
+                        Terug naar overzicht
+                    </a>
+                    }
+                    else if (isParticipant)
+                    {
+                    <!-- Leave Button -->
+                    <a href="@Url.Action("Leave", "AttendedNights", new { id = Model.GameNight.Id })" class="flex w-full justify-center rounded-md bg-[#6a9acc] hover:bg-[#4f7499] text-white font-semibold py-2 transition duration-300">
+                        Afmelden
+                    </a>
+                    <div class="p-4">
+                        <a href="@Url.Action("Index", "GameNights")" class="flex w-full justify-center rounded-md bg-gray-600 hover:bg-gray-800 text-white font-semibold py-2 transition duration-300">
+                            Terug naar overzicht
+                        </a>
+                    </div>
+                    }
+                </div>
+
+                <!-- Back to Overview Button -->
+                
+        </div>
         </div>
     </div>

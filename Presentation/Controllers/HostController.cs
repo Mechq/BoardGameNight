@@ -9,6 +9,7 @@ using Presentation.Models;
 using Presentation.ViewModels;
 
 namespace Presentation.Controllers;
+
 [Authorize]
 
 public class HostController : Controller
@@ -26,7 +27,7 @@ public class HostController : Controller
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        
+
         var gameNights = await _gameNightContext.Evenings
             .Include(e => e.Address)
             .Include(e => e.Participants)
@@ -43,23 +44,24 @@ public class HostController : Controller
             .Where(u => participantIds.Contains(u.Id))
             .ToListAsync();
 
-        
+
         var gameNightsWithDetails = gameNights.Select(gameNight => new GameNightViewModel
         {
             GameNight = gameNight,
-            Host = hosts.FirstOrDefault(u => u.Id == gameNight.HostId) ?? new User { Name = "Unknown" }, 
+            Host = hosts.FirstOrDefault(u => u.Id == gameNight.HostId) ?? new User { Name = "Unknown" },
             Participants = gameNight.Participants
-                .Select(p => participants.FirstOrDefault(u => u.Id == p.ParticipantId) ?? new User { Name = "Unknown" }) 
+                .Select(p => participants.FirstOrDefault(u => u.Id == p.ParticipantId) ?? new User { Name = "Unknown" })
                 .ToList()
         }).ToList();
 
-        return View(gameNightsWithDetails);  
+        return View(gameNightsWithDetails);
     }
 
     public IActionResult CantEdit()
     {
         //todo add view
-        ViewBag.Message = "Minimaal één deelnemer heeft zich al aangemeld voor deze avond. Je kunt de avond niet meer aanpassen.";
+        ViewBag.Message =
+            "Minimaal één deelnemer heeft zich al aangemeld voor deze avond. Je kunt de avond niet meer aanpassen.";
         return View();
     }
 
@@ -68,8 +70,8 @@ public class HostController : Controller
     {
         Console.WriteLine("Delete evening with id: " + id);
         var evening = _gameNightContext.Evenings.FirstOrDefault(e => e.Id == id);
-        Console.WriteLine("Evening found: " + evening); 
-        _gameNightContext.Evenings.Remove(evening?? throw new InvalidOperationException("evening must exist."));
+        Console.WriteLine("Evening found: " + evening);
+        _gameNightContext.Evenings.Remove(evening ?? throw new InvalidOperationException("evening must exist."));
         _gameNightContext.SaveChanges();
         return RedirectToAction("Index");
     }
@@ -78,97 +80,146 @@ public class HostController : Controller
     public async Task<IActionResult> Form(int? id)
     {
         Evening? evening = null;
-    
+        List<Game> games = null;
+        List<int> selectedGameIds = new List<int>();
+
         if (!id.HasValue)
         {
             evening = new Evening();
+            games = await _gameNightContext.Games.ToListAsync();
         }
         else
         {
-            
+
             evening = await _gameNightContext.Evenings
                 .Include(e => e.Address)
                 .FirstOrDefaultAsync(e => e.Id == id);
+            
+            games = await _gameNightContext.Games.ToListAsync();
+            
+            selectedGameIds = await _gameNightContext.EveningGame
+                .Where(eg => eg.EveningId == id)
+                .Select(eg => eg.GameId)
+                .ToListAsync();
         }
-    
-        return View(evening);
-    }
-    
-    [HttpPost]
-    public async Task<IActionResult> Form(Evening evening)
-    {
+
         
-        if (ModelState.IsValid)
+
+        var viewModel = new EveningFormViewModel
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Evening = evening ?? throw new InvalidOperationException("evening must exist."),
+            AllGames = games,
+            SelectedGameIds = selectedGameIds
+        };
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Form(EveningFormViewModel eveningFormViewModel)
+    {
+        Console.WriteLine("eveningFormViewModel.Evening.Id: " + eveningFormViewModel.Evening.Id, "eveningFormViewModel.SelectedGameIds: " + eveningFormViewModel.SelectedGameIds, "eveningFormViewModel.Evening.AddressId: " + eveningFormViewModel.Evening.AddressId);
+        
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+     
+    try
+    {
+        Evening? newEvening;
+        
+        if (eveningFormViewModel.Evening?.Id > 0)
+        {
+            Console.WriteLine("------------------------------Updating existing evening");
+            newEvening = await _gameNightContext.Evenings.FindAsync(eveningFormViewModel.Evening.Id);
             
-            var address = new Address
+            if (newEvening == null)
             {
-                Street = evening.Address.Street,
-                City = evening.Address.City,
-                HouseNumber = evening.Address.HouseNumber
-            };
+                return NotFound();
+            }
             
-            if (evening.AddressId > 0) 
+            newEvening.HostId = userId ?? throw new InvalidOperationException("User must be logged in.");
+            newEvening.HostDate = eveningFormViewModel.Evening.HostDate;
+            newEvening.MaxUsers = eveningFormViewModel.Evening.MaxUsers;
+            newEvening.Allergy = eveningFormViewModel.Evening.Allergy;
+            /*
+            await _gameNightContext.SaveChangesAsync();
+            */
+
+            if (eveningFormViewModel.Evening.AddressId > 0)
             {
-                var existingAddress = await _gameNightContext.Addresses.FindAsync(evening.AddressId);
+                var existingAddress = await _gameNightContext.Addresses.FindAsync(eveningFormViewModel.Evening.AddressId);
                 if (existingAddress != null)
                 {
-                    existingAddress.Street = address.Street;
-                    existingAddress.City = address.City;
-                    existingAddress.HouseNumber = address.HouseNumber;
-                    await _gameNightContext.SaveChangesAsync();
+                    existingAddress.Street = eveningFormViewModel.Evening.Address.Street;
+                    existingAddress.City = eveningFormViewModel.Evening.Address.City;
+                    existingAddress.HouseNumber = eveningFormViewModel.Evening.Address.HouseNumber;
                 }
             }
             else
             {
-                _gameNightContext.Addresses.Add(address);
-                await _gameNightContext.SaveChangesAsync();
-            }
-
-            Evening? newEvening;
-            
-            if (evening.Id > 0) 
-            {
-                newEvening = await _gameNightContext.Evenings.FindAsync(evening.Id);
-                if (newEvening == null)
+                
+                var newAddress = new Address
                 {
-                    return NotFound(); 
-                }
-               
-                newEvening.HostId = userId ?? throw new InvalidOperationException("User must be logged in.");
-                newEvening.HostDate = evening.HostDate;
-                newEvening.MaxUsers = evening.MaxUsers;
-                newEvening.Allergy = evening.Allergy;
-                newEvening.AddressId = address.Id;
-            }
-            else
-            {
-                newEvening = new Evening
-                {
-                    HostId = userId ?? throw new InvalidOperationException("User must be logged in."),
-                    HostDate = evening.HostDate,
-                    MaxUsers = evening.MaxUsers,
-                    Allergy = evening.Allergy,
-                    AddressId = address.Id
+                    Street = eveningFormViewModel.Evening.Address.Street,
+                    City = eveningFormViewModel.Evening.Address.City,
+                    HouseNumber = eveningFormViewModel.Evening.Address.HouseNumber
                 };
-                await _gameNightContext.Evenings.AddAsync(newEvening);
+                newEvening.Address = newAddress; 
+            }
+        }
+        else
+        {
+            Console.WriteLine("------------------------------Creating new evening");
+            newEvening = new Evening
+            {
+                HostId = userId ?? throw new InvalidOperationException("User must be logged in."),
+                HostDate = eveningFormViewModel.Evening.HostDate ,
+                MaxUsers = eveningFormViewModel.Evening.MaxUsers,
+                Allergy = eveningFormViewModel.Evening.Allergy,
+                Address = new Address
+                {
+                    Street = eveningFormViewModel.Evening.Address.Street,
+                    City = eveningFormViewModel.Evening.Address.City,
+                    HouseNumber = eveningFormViewModel.Evening.Address.HouseNumber
+                }
+            };
+            await _gameNightContext.Evenings.AddAsync(newEvening);
+        }
+        await _gameNightContext.SaveChangesAsync();
+        if (eveningFormViewModel.SelectedGameIds != null)
+        {
+            
+            if (eveningFormViewModel.Evening.Id > 0)
+            {
+                var existingGames = await _gameNightContext.EveningGame
+                    .Where(eg => eg.EveningId == newEvening.Id)
+                    .ToListAsync();
+
+                _gameNightContext.EveningGame.RemoveRange(existingGames);
             }
 
             
-            
-            await _gameNightContext.SaveChangesAsync();
-            return RedirectToAction("Index");
+            foreach (var gameId in eveningFormViewModel.SelectedGameIds)
+            {
+                var eveningGame = new EveningGame
+                {
+                    EveningId = newEvening.Id,
+                    GameId = gameId
+                };
+                _gameNightContext.EveningGame.Add(eveningGame);
+            }
         }
-
-        return View(evening);
+        
+        await _gameNightContext.SaveChangesAsync();
+        return RedirectToAction("Index");
     }
+    catch (Exception ex)
+    {
+        ModelState.AddModelError(string.Empty, "An error occurred while saving data. Please try again.");
+        return View(eveningFormViewModel);
+    }
+}
 
 
-
-
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

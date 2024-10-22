@@ -4,5 +4,7 @@ public enum Genre
 {
     Horror,
     Fantasy,
-    Medieval
+    Medieval,
+    SciFi,
+    Other
 }
