@@ -9,12 +9,32 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+var DefaultConnection = String.Empty;
+var IdentityConnection = String.Empty;
+if (builder.Environment.IsDevelopment())
+{
+    DefaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+    IdentityConnection = builder.Configuration.GetConnectionString("IdentityConnection");
+}
+else
+{
+    DefaultConnection = Environment.GetEnvironmentVariable("DefaultConnection");
+    IdentityConnection = Environment.GetEnvironmentVariable("IdentityConnection");
+}
+if (string.IsNullOrEmpty(DefaultConnection) || string.IsNullOrEmpty(IdentityConnection))
+{
+    DefaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+    IdentityConnection = builder.Configuration.GetConnectionString("IdentityConnection");
+}
+
+Console.WriteLine($"DefaultConnection: {DefaultConnection}");
+Console.WriteLine($"IdentityConnection: {IdentityConnection}");
 
 builder.Services.AddDbContext<GameNightContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(DefaultConnection));
 
 builder.Services.AddDbContext<IdentityContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
+    options.UseSqlServer(IdentityConnection));
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {

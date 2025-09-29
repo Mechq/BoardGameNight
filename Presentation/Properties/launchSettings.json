@@ -15,7 +15,9 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5116",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DefaultConnection": "Server=tcp:serversidewp.database.windows.net,1433;Initial Catalog=ServerSide-Web-Programming;Persist Security Info=False;User ID=beheer;Password=Lj75JiPo2f;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+        "IdentityConnection": "Server=tcp:serversidewp.database.windows.net,1433;Initial Catalog=IdentityFramework;Persist Security Info=False;User ID=beheer;Password=Lj75JiPo2f;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       }
     },
     "https": {
@@ -24,15 +26,20 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7032;http://localhost:5116",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DefaultConnection": "Server=tcp:serversidewp.database.windows.net,1433;Initial Catalog=ServerSide-Web-Programming;Persist Security Info=False;User ID=beheer;Password=Lj75JiPo2f;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+        "IdentityConnection": "Server=tcp:serversidewp.database.windows.net,1433;Initial Catalog=IdentityFramework;Persist Security Info=False;User ID=beheer;Password=Lj75JiPo2f;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       }
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DefaultConnection": "Server=tcp:serversidewp.database.windows.net,1433;Initial Catalog=ServerSide-Web-Programming;Persist Security Info=False;User ID=beheer;Password=Lj75JiPo2f;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+        "IdentityConnection": "Server=tcp:serversidewp.database.windows.net,1433;Initial Catalog=IdentityFramework;Persist Security Info=False;User ID=beheer;Password=Lj75JiPo2f;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       }
     }
   }
+
 }

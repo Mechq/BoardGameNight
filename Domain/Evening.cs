@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Domain
 {
     public class Evening
@@ -25,8 +27,11 @@ namespace Domain
         public string? Allergy { get; set; }
         public Address Address { get; set; }
         public int AddressId { get; set; }  
-
+        
+        [JsonIgnore] 
         public List<EveningGame> Games { get; set; }
+        
+        [JsonIgnore] 
         public List<EveningParticipant> Participants { get; set; } 
     }
 }
