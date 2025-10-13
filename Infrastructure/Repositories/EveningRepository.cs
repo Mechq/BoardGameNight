@@ -15,12 +15,64 @@ public class EveningRepository : IEveningRepository
 
     public IEnumerable<Evening> GetAll()
     {
-        return _context.Evenings.Include(e => e.Games).ToList(); // Include games if needed
+        return _context.Evenings
+            .Include(e => e.Games)            
+            .ThenInclude(eg => eg.Game)
+            .ToList();
     }
 
     public Evening? GetById(int id)
     {
-        return _context.Evenings.Include(e => e.Games)
+        return _context.Evenings
+            .Include(e => e.Games)
             .FirstOrDefault(e => e.Id == id); 
     }
+    
+    public void Enroll(int eveningId, string participantId)
+    {
+        var evening = _context.Evenings
+            .Include(e => e.Participants)
+            .FirstOrDefault(e => e.Id == eveningId);
+
+        if (evening == null)
+        {
+            throw new Exception("Evening not found");
+        }
+
+        if (evening.Participants.Any(p => p.ParticipantId == participantId))
+        {
+            throw new Exception("Participant already enrolled");
+        }
+
+        evening.Participants.Add(new EveningParticipant
+        {
+            EveningId = eveningId,
+            ParticipantId = participantId
+        });
+
+        _context.SaveChanges();
+    }
+    
+    public void Unroll(int eveningId, string participantId)
+    {
+        var evening = _context.Evenings
+            .Include(e => e.Participants)
+            .FirstOrDefault(e => e.Id == eveningId);
+
+        if (evening == null)
+        {
+            throw new Exception("Evening not found");
+        }
+
+        var participant = evening.Participants.FirstOrDefault(p => p.ParticipantId == participantId);
+        if (participant == null)
+        {
+            throw new Exception("Participant not enrolled");
+        }
+
+        evening.Participants.Remove(participant);
+        _context.SaveChanges();
+    }
+  
+    
 }

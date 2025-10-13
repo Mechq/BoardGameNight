@@ -5,7 +5,6 @@ using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Models;
 using Presentation.ViewModels;
 
 namespace Presentation.Controllers;

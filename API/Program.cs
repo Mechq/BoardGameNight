@@ -1,19 +1,33 @@
 using API.Queries;
+using Domain;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddControllers();
 builder.Services.AddScoped<IEveningRepository, EveningRepository>();
 
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
+var gameNightConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+builder.Services.AddDbContext<IdentityContext>(options =>
+    options.UseSqlServer(identityConnectionString));
+
+
 builder.Services.AddDbContext<GameNightContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(gameNightConnectionString));
 
 
+builder.Services.AddAuthorization();
+
+
+builder.Services.AddIdentityApiEndpoints<User>()
+    .AddEntityFrameworkStores<IdentityContext>();
 
 builder.Services
     .AddGraphQLServer()
@@ -25,22 +39,21 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-        options.RoutePrefix = string.Empty;
-    });
+    app.UseSwaggerUI();
+
+   
 }
 
 app.UseHttpsRedirection();
 app.MapGraphQL();
+app.UseAuthorization();
+app.MapControllers();
+app.MapIdentityApi<User>();
 
 app.Run();
-

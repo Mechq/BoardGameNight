@@ -5,7 +5,6 @@ using Domain;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Models;
 using Presentation.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 

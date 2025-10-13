@@ -23,7 +23,7 @@
       </PackageReference>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Migrations\" />
+      <Folder Include="Models\" />
     </ItemGroup>
 
     <Target Name="Tailwind" BeforeTargets="Build">
