@@ -11,24 +11,13 @@ builder.Services.AddControllersWithViews();
 
 var DefaultConnection = String.Empty;
 var IdentityConnection = String.Empty;
-if (builder.Environment.IsDevelopment())
-{
-    DefaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
-    IdentityConnection = builder.Configuration.GetConnectionString("IdentityConnection");
-}
-else
-{
-    DefaultConnection = Environment.GetEnvironmentVariable("DefaultConnection");
-    IdentityConnection = Environment.GetEnvironmentVariable("IdentityConnection");
-}
-if (string.IsNullOrEmpty(DefaultConnection) || string.IsNullOrEmpty(IdentityConnection))
-{
-    DefaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
-    IdentityConnection = builder.Configuration.GetConnectionString("IdentityConnection");
-}
 
-Console.WriteLine($"DefaultConnection: {DefaultConnection}");
-Console.WriteLine($"IdentityConnection: {IdentityConnection}");
+
+    DefaultConnection = Environment.GetEnvironmentVariable("DEFAULTCONNECTION");
+    IdentityConnection = Environment.GetEnvironmentVariable("IDENTITYCONNECTION");
+
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = DefaultConnection;
+    builder.Configuration["ConnectionStrings:IdentityConnection"] = IdentityConnection;
 
 builder.Services.AddDbContext<GameNightContext>(options =>
     options.UseSqlServer(DefaultConnection));
