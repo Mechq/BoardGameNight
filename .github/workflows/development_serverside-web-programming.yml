@@ -1,55 +1,57 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+# .github/workflows/deploy-presentation.yml
 
-name: Build and deploy ASP.Net Core app to Azure Web App - ServerSide-Web-Programming
+name: Build and Deploy - ServerSide-Web-Programming (Presentation)
 
 on:
   push:
     branches:
-      - development
-  workflow_dispatch:
+      - development   # Trigger deployment when pushing to 'development'
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0'
+          dotnet-version: '8.0.x'
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Restore dependencies
+        run: dotnet restore ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Build
+        run: dotnet build ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj --configuration Release --no-restore
 
-      - name: Upload artifact for deployment job
+      - name: Publish
+        run: dotnet publish ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj -c Release -o ./publish
+
+      - name: Upload published app as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: presentation-app
+          path: ./publish
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    
+
     steps:
-      - name: Download artifact from build job
+      - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
-      
+          name: presentation-app
+
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'ServerSide-Web-Programming'
-          slot-name: 'Production'
-          package: .
+          app-name: 'ServerSide-Web-Programming'    # Azure App Service name
+          slot-name: 'Production'                   # Or 'staging' if you use slots
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5DE8B11889BE453C9C8D4AAF605FAB78 }}
+          package: .
