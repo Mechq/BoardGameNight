@@ -5,24 +5,30 @@ using Xunit;
 using System;
 using System.Collections.Generic;
 
-
 public class EveningManagementTest
 {
     [Fact]
     public void Evening_CanBeModified_WhenNoParticipants()
     {
         var address = new Address(1, "Main Street", "City");
-        var evening = new Evening(1, "host123", 10, DateOnly.FromDateTime(DateTime.Today.AddDays(7)), null, address);
+        var evening = new Evening(1, "host123", 10, DateOnly.FromDateTime(DateTime.Today.AddDays(7)), null, address)
+        {
+            Participants = new List<EveningParticipant>(),
+            Games = new List<EveningGame>()
+        };
 
         Assert.Empty(evening.Participants);
-        
     }
 
     [Fact]
     public void Evening_CannotBeModified_WhenHasParticipants()
     {
         var address = new Address(1, "Main Street", "City");
-        var evening = new Evening(1, "host123", 10, DateOnly.FromDateTime(DateTime.Today.AddDays(7)), null, address);
+        var evening = new Evening(1, "host123", 10, DateOnly.FromDateTime(DateTime.Today.AddDays(7)), null, address)
+        {
+            Participants = new List<EveningParticipant>(),
+            Games = new List<EveningGame>()
+        };
         
         evening.Participants.Add(new EveningParticipant { ParticipantId = "player1", EveningId = evening.Id });
         

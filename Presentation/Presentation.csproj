@@ -22,9 +22,6 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Models\" />
-    </ItemGroup>
 
     <Target Name="Tailwind" BeforeTargets="Build">
         <Exec Command="npm run css:build"/>
