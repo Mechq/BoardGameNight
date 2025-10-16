@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Presentation</title>
+    @section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+
+</head>
+<body>
+<header>
+    <nav class="bg-gray-800">
+        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="relative flex h-16 items-center justify-between">
+                <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                    <!-- Mobile menu button-->
+                    <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="absolute -inset-0.5"></span>
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                    <div class="flex flex-shrink-0 items-center">
+                        <a asp-controller="Home" asp-action="Index" asp-area="">
+                        <img class="h-8 w-auto rounded-lg"  src="@Url.Content("~/images/Picture1.png")" alt="Your Company">
+                        </a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:block">
+                        <div class="flex space-x-4">
+                            <a asp-controller="GameNights" asp-action="Index" asp-area="" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" aria-current="page">Game Avonden</a>
+                            <a asp-controller="AttendedNights" asp-action="Index" asp-area="" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Aangemeld</a>
+                            <a asp-controller="Host" asp-action="Index" asp-area="" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Georganiseerd</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                    
+                    
+                    <!-- Profile button -->
+                    <div class="relative ml-3">
+                        <div>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                            <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="profileMenuButton" aria-expanded="false" aria-haspopup="true">
+                                <span class="absolute -inset-1.5"></span>
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-8 w-8 rounded-full"  src="@Url.Content("~/images/profile-icon-design-free-vector.jpg")" alt="">
+                            </button>
+
+                            <!-- Dropdown menu -->
+                            <div id="profileMenu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 hidden" role="menu" aria-orientation="vertical" aria-labelledby="profileMenuButton" tabindex="-1">
+                                <a href="@Url.Action("Index", "Profile")" class="flex px-4 py-2 rounded-md text-sm text-gray-700 items-center hover:bg-[#add6ff]"  role="menuitem" tabindex="-1" id="user-menu-item-0">
+                                    <img src="https://static.thenounproject.com/png/2821207-200.png" alt="Profile Icon" class="w-5 h-5 mr-2">
+                                    Jouw profiel
+                                </a>
+                                <a href="@Url.Action("Logout", "Profile")" class="flex px-4 py-2 text-sm rounded-md text-gray-700 hover:bg-[#add6ff] items-center" role="menuitem" tabindex="-1" id="user-menu-item-1">
+                                    <img src="https://static-00.iconduck.com/assets.00/log-out-icon-2048x2048-cru8zabe.png" alt="Sign Out Icon" class="w-5 h-5 mr-2">
+                                    Uitloggen
+                                </a>
+                            </div>
+                            }
+                            else
+                            {
+                            <a asp-controller="Profile" asp-action="Login" asp-area="">
+                                <button type="button" class="relative flex rounded-full bg-indigo-600 hover:bg-indigo-700 text-sm text-white font-bold py-2 px-4 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                    <span class="absolute -inset-1.5"></span>
+                                    <span class="sr-only">Login</span>
+                                    Login
+                                </button>
+                            </a>
+                            }
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+
+                
+                
+            </div>
+        </div>
+
+        <!-- Mobile menu, show/hide based on menu state. -->
+        <div class="sm:hidden" id="mobile-menu">
+            <div class="space-y-1 px-2 pb-3 pt-2">
+                <a asp-controller="GameNights" asp-action="Index" asp-area=""  class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Game Avonden</a>
+                <a asp-controller="AttendedNights" asp-action="Index" asp-area="" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Aangemeld </a>
+                <a asp-controller="Host" asp-action="Index" asp-area="" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Georganiseerd</a>  
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="">
+    <main role="main" class="flex flex-col min-h-screen">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="bg-gray-900 text-gray-400 py-8">
+    <div class="max-w-screen-xl mx-auto px-4 lg:px-6">
+        <!-- Upper Footer Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- About Section -->
+            <div>
+                <h5 class="text-white font-bold text-lg mb-4">Over Ons</h5>
+                <p class="text-gray-400 text-sm">Wij organiseren gezellige bordspellenavonden om mensen te helpen met het leren van de Nederlandse taal en om sociale verbindingen te creëren binnen onze gemeenschap.</p>
+            </div>
+
+            <!-- Links Section -->
+            <div>
+                <h5 class="text-white font-bold text-lg mb-4">Snelle Links</h5>
+                <ul>
+                    <li class="mb-2">
+                        <a href="#" class="hover:text-[#24E0B8] transition duration-300">Home</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="hover:text-[#24E0B8] transition duration-300">Over Ons</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="hover:text-[#24E0B8] transition duration-300">Contact</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact Section -->
+            <div>
+                <h5 class="text-white font-bold text-lg mb-4">Contact</h5>
+                <p class="text-gray-400 text-sm mb-2">
+                    Email: <a href="mailto:info@taalschool.com" class="hover:text-[#24E0B8]">info@taalschool.com</a>
+                </p>
+                <p class="text-gray-400 text-sm">
+                    Telefoon: <a href="tel:+31612345678" class="hover:text-[#24E0B8]">+31 6 12345678</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Lower Footer Section -->
+        <div class="mt-8 border-t border-gray-700 pt-6 text-center">
+            <div class="flex justify-center space-x-6 mb-4">
+                <!-- Social Media Icons -->
+                <a href="#" class="text-gray-400 hover:text-[#24E0B8] transition duration-300">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-9.96 4.46-9.96 9.96 0 4.93 3.65 9.02 8.44 9.9v-6.99H8.89V12H10.5v-1.58c0-1.6.96-2.5 2.4-2.5.7 0 1.43.12 1.43.12v1.57h-.81c-.8 0-1.06.5-1.06 1.02V12h1.8l-.29 2.91h-1.5V22c4.79-.88 8.44-4.97 8.44-9.9 0-5.5-4.46-9.96-9.96-9.96z"></path></svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-[#24E0B8] transition duration-300">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.6-2.47.71a4.27 4.27 0 001.88-2.37 8.56 8.56 0 01-2.72 1.04A4.26 4.26 0 0016.03 4c-2.37 0-4.3 1.93-4.3 4.31 0 .34.04.68.1 1A12.13 12.13 0 013 5.36a4.3 4.3 0 00-.58 2.17 4.31 4.31 0 001.92 3.59 4.21 4.21 0 01-1.95-.54v.05c0 2.02 1.43 3.71 3.33 4.09a4.23 4.23 0 01-1.94.07 4.31 4.31 0 004.03 2.99A8.58 8.58 0 012 19.1a12.08 12.08 0 006.54 1.91c7.85 0 12.15-6.5 12.15-12.14 0-.18-.01-.36-.02-.54A8.7 8.7 0 0024 5.54a8.48 8.48 0 01-2.54.7z"></path></svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-[#24E0B8] transition duration-300">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-9.96 4.46-9.96 9.96 0 4.93 3.65 9.02 8.44 9.9v-6.99H8.89V12H10.5v-1.58c0-1.6.96-2.5 2.4-2.5.7 0 1.43.12 1.43.12v1.57h-.81c-.8 0-1.06.5-1.06 1.02V12h1.8l-.29 2.91h-1.5V22c4.79-.88 8.44-4.97 8.44-9.9 0-5.5-4.46-9.96-9.96-9.96z"></path></svg>
+                </a>
+            </div>
+            <p class="text-gray-500">© 2024 Spelletjes Avond. Alle rechten voorbehouden.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    document.addEventListener('click', function(event) {
+        var menu = document.getElementById('profileMenu');
+        var button = document.getElementById('profileMenuButton');
+
+                if (!menu.contains(event.target) && !button.contains(event.target)) {
+            menu.classList.add('hidden');
+        }
+    });
+
+    document.getElementById('profileMenuButton').addEventListener('click', function(event) {
+        var menu = document.getElementById('profileMenu');
+        menu.classList.toggle('hidden');
+
+    
+        event.stopPropagation();
+    });
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

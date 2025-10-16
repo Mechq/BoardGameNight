@@ -1,0 +1,95 @@
+﻿@{
+ViewData["Title"] = "Home Page";
+}
+<div>
+    <!-- Hero Section -->
+    <div class="relative h-screen w-full">
+        <img src="https://cartamundi.com/app/uploads/2021/11/filler_image_01.png" alt="Background Image" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute inset-0 flex flex-col justify-center pl-10 md:pl-20">
+            <h1 class="text-4xl text-white font-bold mb-4">Hi, welkom bij de spelletjesavond!</h1>
+            <p class="text-xl text-white">Georganiseerd door: Taalschool en Avans</p>
+        </div>
+    </div>
+
+    <!-- About Us Section -->
+    <div class="bg-[#eaf4ff]">
+        <div class="py-12 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+            <div class="max-w-screen-lg text-gray-500 sm:text-lg">
+                <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900">Wie wij zijn</h2>
+                <p class="mb-4 font-light">Wij zijn een initiatief van een taalschool en buurtvereniging die samen een leuke en leerzame activiteit hebben opgezet om mensen te helpen met het leren van de Nederlandse taal. Wij geloven dat het leren van een taal niet alleen in een klaslokaal hoeft te gebeuren, maar ook door plezier en sociale interactie. Met onze bordspellenavonden willen we een ontspannen en gezellige sfeer creëren waarin iedereen zich welkom voelt en spelenderwijs de taal kan oefenen. Samen bouwen we aan een inclusieve en ondersteunende gemeenschap.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section - Darker Blue and Icon-based Cards -->
+    <div class="bg-[#d6eaff] py-16">
+        <div class="mx-auto max-w-screen-xl px-4 lg:px-6">
+            <div class="max-w-screen-md mx-auto text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900">Waarom deelnemen?</h2>
+                <p class="text-lg text-gray-700">Leer Nederlands op een leuke en interactieve manier, ontmoet nieuwe vrienden, en geniet van een gezellige avond.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Feature Card 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <div class="mb-4">
+                        <svg class="w-12 h-12 mx-auto text-[#24E0B8]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Taalvaardigheden verbeteren</h3>
+                    <p class="text-gray-600">Door het spelen van bordspellen oefen je spelenderwijs je Nederlands in een ontspannen omgeving.</p>
+                </div>
+                <!-- Feature Card 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <div class="mb-4">
+                        <svg class="w-12 h-12 mx-auto text-[#24E0B8]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Nieuwe mensen ontmoeten</h3>
+                    <p class="text-gray-600">Maak vrienden en leer van elkaar tijdens een avond vol plezier en interactie.</p>
+                </div>
+                <!-- Feature Card 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <div class="mb-4">
+                        <svg class="w-12 h-12 mx-auto text-[#24E0B8]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Gezelligheid staat voorop</h3>
+                    <p class="text-gray-600">Of je nu van spellen houdt of gewoon voor de gezelligheid komt, iedereen is welkom!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="bg-white py-16">
+        <div class="mx-auto max-w-screen-xl px-4 lg:px-6">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-extrabold text-gray-900">Ervaringen van deelnemers</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                    <p class="text-gray-500 mb-4">"De bordspellenavond heeft me echt geholpen om mijn Nederlands te verbeteren. En ik heb ook nieuwe vrienden gemaakt!"</p>
+                    <p class="font-bold text-gray-900">- Ahmed</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                    <p class="text-gray-500 mb-4">"Het was zo leuk en leerzaam! Iedereen was heel vriendelijk en ik heb veel geleerd."</p>
+                    <p class="font-bold text-gray-900">- Maria</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                    <p class="text-gray-500 mb-4">"Ik ben heel blij dat ik mee heb gedaan, het is een geweldige manier om te oefenen en ook gewoon plezier te hebben."</p>
+                    <p class="font-bold text-gray-900">- Fatima</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center py-8 bg-white">
+
+        <a href="@Url.Action("Login", "Profile")" class="px-6 py-3 bg-[#24E0B8] text-white font-bold rounded-lg shadow-lg hover:bg-[#1cbfa0]">
+            Meld je aan
+        </a>
+        </div>
+</div>

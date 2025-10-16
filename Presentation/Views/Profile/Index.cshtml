@@ -1,0 +1,38 @@
+@model Presentation.ViewModels.ProfileViewModel
+
+<div class="relative min-h-screen bg-cover bg-center" style="background-image: url('https://cartamundi.com/app/uploads/2021/11/filler_image_01.png');">
+    <!-- Background Blur -->
+    <div class="absolute inset-0 bg-black opacity-30"></div>
+    <div class="absolute inset-0 backdrop-blur-sm"></div>
+
+    <div class="flex items-center justify-center min-h-screen relative z-10">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+            <h1 class="text-2xl font-bold text-center text-[#6a9acc]">Gebruikers profiel</h1>
+
+            <div class="mt-4">
+                <label class="block text-gray-700">Naam:</label>
+                <p class="text-gray-900 font-medium">@(Model.User?.Name ?? "NA")</p>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-gray-700">Gender:</label>
+                <p class="text-gray-900 font-medium">@Model.User?.Gender.ToString()</p>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-gray-700">Geboortedatum:</label>
+                <p class="text-gray-900 font-medium">@Model.User?.DateOfBirth.ToString("d")</p>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-gray-700">Allergiëen:</label>
+                <p class="text-gray-900 font-medium">@(Model.User?.Diet ?? "N/A")</p>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-gray-700">Adres:</label>
+                <p class="text-gray-900 font-medium">@(Model.Address?.Street ?? "N/A") @(Model.Address?.HouseNumber), @(Model.Address?.City ?? "N/A")</p>
+            </div>
+        </div>
+    </div>
+</div>

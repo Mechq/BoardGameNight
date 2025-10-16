@@ -1,0 +1,37 @@
+@if (ViewBag.Message != null)
+{
+<div id="warningModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full">
+        <h2 class="text-lg font-semibold">Waarschuwing!</h2>
+        <p class="mt-2">@ViewBag.Message</p>
+        <div class="flex justify-end mt-4">
+            <button id="joinYesButton" class="px-4 py-2 bg-blue-600 text-white rounded-lg mr-2">Ja, ik wil me aanmelden</button>
+            <button id="joinNoButton" class="px-4 py-2 bg-gray-300 rounded-lg" onclick="closeModal()">Nee, ik ben goed</button>
+        </div>
+    </div>
+</div>
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const warningModal = document.getElementById('warningModal');
+        const joinYesButton = document.getElementById('joinYesButton');
+
+        // If there is a warning message, show the modal
+        if (warningModal) {
+            warningModal.style.display = 'flex';
+        }
+
+        joinYesButton.addEventListener('click', function() {
+            // Use the eveningId from ViewBag
+            const eveningId = '@ViewBag.EveningId';
+            window.location.href = '@Url.Action("JoinWithAllergy", "GameNights", new { eveningId = "__eveningId__" })'
+                .replace('__eveningId__', eveningId); 
+        });
+    });
+
+    function closeModal() {
+        const warningModal = document.getElementById('warningModal');
+        warningModal.style.display = 'none'; 
+    }
+</script>
