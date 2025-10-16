@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - name: Download build artifact
-        uses: actions.download-artifact@v4
+        uses: actions/download-artifact@v4
         with:
           name: presentation-app
 
@@ -55,3 +55,4 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5DE8B11889BE453C9C8D4AAF605FAB78 }}
           package: .
+
