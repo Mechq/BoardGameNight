@@ -3,27 +3,27 @@ using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using DotNetEnv;
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllersWithViews();
 
-var DefaultConnection = String.Empty;
-var IdentityConnection = String.Empty;
+var defaultConnection = Environment.GetEnvironmentVariable("DEFAULTCONNECTION");
+var identityConnection = Environment.GetEnvironmentVariable("IDENTITYCONNECTION");
 
 
-    DefaultConnection = Environment.GetEnvironmentVariable("DEFAULTCONNECTION");
-    IdentityConnection = Environment.GetEnvironmentVariable("IDENTITYCONNECTION");
+if (!string.IsNullOrEmpty(defaultConnection))
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = defaultConnection;
 
-    builder.Configuration["ConnectionStrings:DefaultConnection"] = DefaultConnection;
-    builder.Configuration["ConnectionStrings:IdentityConnection"] = IdentityConnection;
+if (!string.IsNullOrEmpty(identityConnection))
+    builder.Configuration["ConnectionStrings:IdentityConnection"] = identityConnection;
 
 builder.Services.AddDbContext<GameNightContext>(options =>
-    options.UseSqlServer(DefaultConnection));
+    options.UseSqlServer(defaultConnection));
 
 builder.Services.AddDbContext<IdentityContext>(options =>
-    options.UseSqlServer(IdentityConnection));
+    options.UseSqlServer(identityConnection));
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
