@@ -1,12 +1,12 @@
 # .github/workflows/deploy-presentation.yml
 
-name: Build and Deploy - ServerSide-Web-Programming (Presentation)
+name: Build and Deploy – Presentation Web Project
 
 on:
   push:
     branches:
-      - Production   # Trigger deployment when pushing to 'development'
-  workflow_dispatch:  # Allow manual trigger
+      - Production
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,13 +24,13 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj
+        run: dotnet restore ./Presentation/Presentation.csproj
 
       - name: Build
-        run: dotnet build ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj --configuration Release --no-restore
+        run: dotnet build ./Presentation/Presentation.csproj --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj -c Release -o ./publish
+        run: dotnet publish ./Presentation/Presentation.csproj -c Release -o ./publish
 
       - name: Upload published app as artifact
         uses: actions/upload-artifact@v4
@@ -44,15 +44,14 @@ jobs:
 
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions.download-artifact@v4
         with:
           name: presentation-app
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'ServerSide-Web-Programming'    # Azure App Service name
-          slot-name: 'Production'                   # Or 'staging' if you use slots
+          app-name: 'ServerSide-Web-Programming'
+          slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5DE8B11889BE453C9C8D4AAF605FAB78 }}
           package: .
-
