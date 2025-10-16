@@ -22,6 +22,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+          
+      - name: Install npm dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Build CSS (Tailwind)
+        working-directory: ./
+        run: npm run css:build
 
       - name: Restore dependencies
         run: dotnet restore ./Presentation/Presentation.csproj
@@ -55,4 +63,5 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5DE8B11889BE453C9C8D4AAF605FAB78 }}
           package: .
+
 
