@@ -18,18 +18,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x' 
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-          
-      - name: Install npm dependencies
-        working-directory: ./
-        run: npm ci
 
-      - name: Build CSS (Tailwind)
-        working-directory: ./
-        run: npm run css:build
+      - name: Install npm dependencies
+        working-directory: ./Presentation
+        run: npm ci
 
       - name: Restore dependencies
         run: dotnet restore ./Presentation/Presentation.csproj
@@ -63,5 +64,3 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5DE8B11889BE453C9C8D4AAF605FAB78 }}
           package: .
-
-
