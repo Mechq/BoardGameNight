@@ -3,38 +3,27 @@ using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using DotNetEnv;
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllersWithViews();
 
-var DefaultConnection = String.Empty;
-var IdentityConnection = String.Empty;
-if (builder.Environment.IsDevelopment())
-{
-    DefaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
-    IdentityConnection = builder.Configuration.GetConnectionString("IdentityConnection");
-}
-else
-{
-    DefaultConnection = Environment.GetEnvironmentVariable("DefaultConnection");
-    IdentityConnection = Environment.GetEnvironmentVariable("IdentityConnection");
-}
-if (string.IsNullOrEmpty(DefaultConnection) || string.IsNullOrEmpty(IdentityConnection))
-{
-    DefaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
-    IdentityConnection = builder.Configuration.GetConnectionString("IdentityConnection");
-}
+var defaultConnection = Environment.GetEnvironmentVariable("DEFAULTCONNECTION");
+var identityConnection = Environment.GetEnvironmentVariable("IDENTITYCONNECTION");
 
-Console.WriteLine($"DefaultConnection: {DefaultConnection}");
-Console.WriteLine($"IdentityConnection: {IdentityConnection}");
+
+if (!string.IsNullOrEmpty(defaultConnection))
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = defaultConnection;
+
+if (!string.IsNullOrEmpty(identityConnection))
+    builder.Configuration["ConnectionStrings:IdentityConnection"] = identityConnection;
 
 builder.Services.AddDbContext<GameNightContext>(options =>
-    options.UseSqlServer(DefaultConnection));
+    options.UseSqlServer(defaultConnection));
 
 builder.Services.AddDbContext<IdentityContext>(options =>
-    options.UseSqlServer(IdentityConnection));
+    options.UseSqlServer(identityConnection));
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
