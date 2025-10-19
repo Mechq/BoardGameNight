@@ -5,8 +5,8 @@ name: Build and Deploy - ServerSide-Web-Programming (Presentation)
 on:
   push:
     branches:
-      - Production   # Trigger deployment when pushing to 'development'
-  workflow_dispatch:  # Allow manual trigger
+      - Production 
+  workflow_dispatch: 
 
 jobs:
   build_and_test:
@@ -32,11 +32,11 @@ jobs:
       - name: Run tests
         run: dotnet test ./Tests/Tests.csproj --configuration Release --no-build --verbosity normal
 
-      - name: Publish Presentation App
-        run: dotnet publish ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj -c Release -o ./publish
-      
+      - name: Publish Presentation app
+        run: dotnet publish ./Presentation/Presentation.csproj -c Release -o ./publish/presentation
+
       - name: Publish API app
-        run: dotnet publish ./API/ServerSide-Web-Programming-API/ServerSide-Web-Programming-API.csproj -c Release -o ./publish/api
+        run: dotnet publish ./API/API.csproj -c Release -o ./publish/api
 
       - name: Upload published Presentation app
         uses: actions/upload-artifact@v4
@@ -85,5 +85,6 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_API }}
           package: .
+
 
 
