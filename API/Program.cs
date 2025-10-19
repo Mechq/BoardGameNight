@@ -11,16 +11,25 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IEveningRepository, EveningRepository>();
 
 
-var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
-var gameNightConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var defaultConnection = Environment.GetEnvironmentVariable("DEFAULTCONNECTION");
+var identityConnection = Environment.GetEnvironmentVariable("IDENTITYCONNECTION");
+
+
+if (!string.IsNullOrEmpty(defaultConnection))
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = defaultConnection;
+
+if (!string.IsNullOrEmpty(identityConnection))
+    builder.Configuration["ConnectionStrings:IdentityConnection"] = identityConnection;
+
+
 
 
 builder.Services.AddDbContext<IdentityContext>(options =>
-    options.UseSqlServer(identityConnectionString));
+    options.UseSqlServer(identityConnection));
 
 
 builder.Services.AddDbContext<GameNightContext>(options =>
-    options.UseSqlServer(gameNightConnectionString));
+    options.UseSqlServer(defaultConnection));
 
 
 builder.Services.AddAuthorization();
