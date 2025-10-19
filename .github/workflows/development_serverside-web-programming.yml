@@ -26,6 +26,10 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
         
+      - name: Install npm dependencies
+        working-directory: ./Presentation
+        run: npm install
+        
       - name: Build solution
         run: dotnet build --configuration Release --no-restore
 
@@ -85,5 +89,6 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_API }}
           package: .
+
 
 
