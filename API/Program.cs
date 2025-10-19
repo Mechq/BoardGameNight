@@ -59,9 +59,14 @@ app.UseSwaggerUI();
 
 
 app.UseHttpsRedirection();
-app.MapGraphQL();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseAuthorization();
+
 app.MapControllers();
+app.MapGraphQL();
 app.MapIdentityApi<User>();
 
 app.Run();
