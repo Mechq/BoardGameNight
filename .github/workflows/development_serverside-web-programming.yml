@@ -5,7 +5,7 @@ name: Build and Deploy - ServerSide-Web-Programming (Presentation)
 on:
   push:
     branches:
-      - development   # Trigger deployment when pushing to 'development'
+      - Production   # Trigger deployment when pushing to 'development'
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
@@ -22,17 +22,17 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-
+          
       - name: Restore dependencies
-        run: dotnet restore ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj
-
+        run: dotnet restore
+        
       - name: Build solution
         run: dotnet build --configuration Release --no-restore
 
       - name: Run tests
         run: dotnet test ./Tests/Tests.csproj --configuration Release --no-build --verbosity normal
 
-      - name: Publish
+      - name: Publish Presentation App
         run: dotnet publish ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj -c Release -o ./publish
       
       - name: Publish API app
@@ -85,3 +85,5 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_API }}
           package: .
+
+
