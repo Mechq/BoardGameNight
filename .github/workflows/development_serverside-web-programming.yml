@@ -5,7 +5,7 @@ name: Build and Deploy - ServerSide-Web-Programming (Presentation)
 on:
   push:
     branches:
-      - development   # Trigger deployment when pushing to 'development'
+      - Production   # Trigger deployment when pushing to 'development'
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
@@ -85,3 +85,4 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_API }}
           package: .
+
