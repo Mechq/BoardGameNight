@@ -85,7 +85,7 @@ jobs:
       - name: Deploy to Azure Web App (API)
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'ServerSide-Web-Programming-API'   
+          app-name: 'ServerSide-Web-Proramming-API'   
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_API }}
           package: .
