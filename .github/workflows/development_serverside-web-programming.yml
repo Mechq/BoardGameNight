@@ -36,8 +36,8 @@ jobs:
       - name: Run tests
         run: dotnet test ./Tests/Tests.csproj --configuration Release --no-build --verbosity normal
 
-      - name: Publish Presentation App
-        run: dotnet publish ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj -c Release -o ./publish
+      - name: Publish Presentation app
+        run: dotnet publish ./Presentation/ServerSide-Web-Programming/ServerSide-Web-Programming.csproj -c Release -o ./publish/presentation
       
       - name: Publish API app
         run: dotnet publish ./API/ServerSide-Web-Programming-API/ServerSide-Web-Programming-API.csproj -c Release -o ./publish/api
