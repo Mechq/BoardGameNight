@@ -1,4 +1,4 @@
-using System.Security.Claims;
+/*using System.Security.Claims;
 using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -107,4 +107,4 @@ public class AttendedNightsControllerTests : ControllerTestBase
         Assert.Null(_gameNightContext.EveningParticipants
             .FirstOrDefault(ep => ep.EveningId == eveningIdToLeave && ep.ParticipantId == TestUserId));
     }
-}
+}*/

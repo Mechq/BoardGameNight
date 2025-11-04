@@ -27,7 +27,17 @@ public class EveningRepository : IEveningRepository
             .Include(e => e.Games)
             .FirstOrDefault(e => e.Id == id); 
     }
-    
+
+    public async Task<List<Evening>> GetAllFuture()
+    {
+        return await _context.Evenings
+            .Include(e => e.Address)
+            .Include(e => e.Participants)
+            .Where(e => e.Participants.Count < e.MaxUsers && e.HostDate > DateOnly.FromDateTime(DateTime.Now)) 
+            .OrderBy(e => e.HostDate)
+            .ToListAsync();
+    }
+
     public void Enroll(int eveningId, string participantId)
     {
         var evening = _context.Evenings

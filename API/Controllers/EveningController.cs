@@ -22,20 +22,24 @@ public class EveningController : ControllerBase
     }
 
    
-    [HttpPost]
+    [HttpPost("{eveningId}/{userId}")]
+    /*
     [Authorize]
-    [Route("/evening/{eveningId}/{userId}")]
-    public void Enroll(int eveningId, string userId)
+    */
+    public IActionResult Enroll(int eveningId, string userId)
     {
         _eveningRepository.Enroll(eveningId, userId);
+        return Ok(new { message = "User enrolled successfully" });
     }
 
-    [HttpDelete]
+    [HttpDelete("{eveningId}/{userId}")]
+    /*
     [Authorize]
-    [Route("/evening/{eveningId}/{userId}")]
-    public void Unroll(int eveningId, string userId)
+    */
+    public IActionResult Unroll(int eveningId, string userId)
     {
         _eveningRepository.Unroll(eveningId, userId);
+        return Ok(new { message = "User unrolled successfully" });
     }
 
 

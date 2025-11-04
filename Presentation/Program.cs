@@ -4,11 +4,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
+using Infrastructure.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IEveningRepository, EveningRepository>();
 
+Env.Load();
 var defaultConnection = Environment.GetEnvironmentVariable("DEFAULTCONNECTION");
 var identityConnection = Environment.GetEnvironmentVariable("IDENTITYCONNECTION");
 
@@ -18,6 +22,9 @@ if (!string.IsNullOrEmpty(defaultConnection))
 
 if (!string.IsNullOrEmpty(identityConnection))
     builder.Configuration["ConnectionStrings:IdentityConnection"] = identityConnection;
+
+Console.WriteLine($"DefaultConnection: {defaultConnection}");
+Console.WriteLine($"IdentityConnection: {identityConnection}");
 
 builder.Services.AddDbContext<GameNightContext>(options =>
     options.UseSqlServer(defaultConnection));

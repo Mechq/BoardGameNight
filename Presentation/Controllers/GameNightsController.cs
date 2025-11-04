@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using Domain;
 using Infrastructure.Data;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,13 @@ public class GameNightsController : Controller
 
     private readonly GameNightContext _gameNightContext;
     private readonly IdentityContext _identityContext;
+    private readonly IEveningRepository _repository;
 
-    public GameNightsController(GameNightContext gameNightContext, IdentityContext identityContext)
+    public GameNightsController(GameNightContext gameNightContext, IdentityContext identityContext, IEveningRepository repository)
     {
         _gameNightContext = gameNightContext;
         _identityContext = identityContext;
+        _repository = repository;
     }
 
     public async Task<IActionResult> Index()
@@ -27,12 +30,7 @@ public class GameNightsController : Controller
         IEnumerable<Evening> gameNights;
         if (userId == null)
         {
-            gameNights = await _gameNightContext.Evenings
-                .Include(e => e.Address)
-                .Include(e => e.Participants)
-                .Where(e => e.Participants.Count < e.MaxUsers && e.HostDate > DateOnly.FromDateTime(DateTime.Now)) 
-                .OrderBy(e => e.HostDate)
-                .ToListAsync();
+            gameNights = await _repository.GetAllFuture();
         }
         else
         {

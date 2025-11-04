@@ -62,7 +62,74 @@ public class GameNightContext : DbContext
             .HasOne(eg => eg.Game)
             .WithMany(g => g.EveningGames)
             .HasForeignKey(eg => eg.GameId);
+        
+         modelBuilder.Entity<Address>().HasData(
+            new Address { Id = 1, Street = "Main Street", City = "Rotterdam", HouseNumber = 42 },
+            new Address { Id = 2, Street = "Baker Street", City = "London", HouseNumber = 221 }
+        );
+
+        modelBuilder.Entity<Game>().HasData(
+            new Game
+            {
+                Id = 1,
+                Name = "Catan",
+                Description = "A strategic board game of trading and building.",
+                Genre = Genre.Fantasy,
+                TypeOfGame = GameType.BoardGame,
+                ImageURL = "https://example.com/catan.jpg",
+                IsAgeRestricted = false
+            },
+            new Game
+            {
+                Id = 2,
+                Name = "Call of Duty",
+                Description = "Fast-paced first-person shooter video game.",
+                Genre = Genre.SciFi,
+                TypeOfGame = GameType.VideoGame,
+                ImageURL = "https://example.com/cod.jpg",
+                IsAgeRestricted = true
+            },
+            new Game
+            {
+                Id = 3,
+                Name = "UNO",
+                Description = "A classic card game of colors and numbers.",
+                Genre = Genre.Other,
+                TypeOfGame = GameType.Cards,
+                ImageURL = "https://example.com/uno.jpg",
+                IsAgeRestricted = false
+            }
+        );
+
+        modelBuilder.Entity<Evening>().HasData(
+            new Evening
+            {
+                Id = 1,
+                HostId = "host123",
+                MaxUsers = 8,
+                HostDate = DateOnly.FromDateTime(DateTime.Now.AddDays(14)),
+                Allergy = "Peanuts",
+                AddressId = 1
+            },
+            new Evening
+            {
+                Id = 2,
+                HostId = "host456",
+                MaxUsers = 10,
+                HostDate = DateOnly.FromDateTime(DateTime.Now.AddDays(14)),
+                Allergy = "None",
+                AddressId = 2
+            }
+        );
+
+        modelBuilder.Entity<EveningGame>().HasData(
+            new EveningGame { EveningId = 1, GameId = 1 },
+            new EveningGame { EveningId = 1, GameId = 3 },
+            new EveningGame { EveningId = 2, GameId = 2 }
+        );
+    
     }
+    
 
 
 
